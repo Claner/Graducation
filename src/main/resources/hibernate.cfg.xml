@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!--指定1连接数据库所用的驱动-->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <!--远程数据库-->
+        <!--<property name="hibernate.connection.url">jdbc:mysql://139.199.165.150:3306/school</property>-->
+        <!--<property name="connection.username">root</property>-->
+        <!--<property name="connection.password">hzwHZW123</property>-->
+        <!--远程数据库-->
+        <!--本地-->
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/school</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password"/>
+        <!--本地-->
+        <property name="connection.characterEncoding">UTF-8</property>
+        <!--指定连接池里最大连接数-->
+        <property name="hibernate.c3p0.max_size">20</property>
+        <!--指定连接池里最小连接数-->
+        <property name="hibernate.c3p0.min_size">1</property>
+        <!--指定连接池里的超时时常-->
+        <property name="hibernate.c3p0.timeout">5000</property>
+        <!--SQL dialect（方言）用于指定何种数据库，可以在Hibernate的文档中查到-->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <!--是否显示生成的SQL生成语句！开发时，一定要显示，方便调试！-->
+        <property name="show_sql">true</property>
+        <!--使显示的sql格式化-->
+        <property name="format_sql">true</property>
+        <property name="hbm2ddl.auto">update</property>
+        <mapping class="Entity.AcademyEntity"/>
+        <mapping class="Entity.AdminEntity"/>
+        <mapping class="Entity.ProfessionalEntity"/>
+        <mapping class="Entity.StudentEntity"/>
+        <mapping class="Entity.UserEntity"/>
+        <mapping class="Entity.CourseEntity"/>
+        <mapping class="Entity.ProfessionalCourseEntity"/>
+        <mapping class="Entity.StuProfessionalCourseEntity"/>
+        <mapping class="Entity.GradeEntity"/>
+    </session-factory>
+</hibernate-configuration>

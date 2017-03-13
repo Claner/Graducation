@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="MySQL - school@139.199.165.150">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="2.6">
+    <schema id="1" name="school">
+      <visible>1</visible>
+    </schema>
+    <schema id="2" name="chat"/>
+    <schema id="3" name="information_schema"/>
+    <schema id="4" name="mysql"/>
+    <schema id="5" name="performance_schema"/>
+    <schema id="6" name="test"/>
+    <table id="7" parent="1" name="academy"/>
+    <table id="8" parent="1" name="admin"/>
+    <table id="9" parent="1" name="course"/>
+    <table id="10" parent="1" name="p_c_middle"/>
+    <table id="11" parent="1" name="professional"/>
+    <table id="12" parent="1" name="student"/>
+    <table id="13" parent="1" name="user"/>
+    <column id="14" parent="7" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="15" parent="7" name="academy_name">
+      <mandatory>1</mandatory>
+      <data-type>char(64)|0</data-type>
+    </column>
+    <key id="16" parent="7" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="17" parent="8" name="admin_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="18" parent="8" name="name">
+      <mandatory>1</mandatory>
+      <data-type>char(32)|0</data-type>
+    </column>
+    <column id="19" parent="8" name="sex">
+      <mandatory>1</mandatory>
+      <data-type>char(1)|0</data-type>
+    </column>
+    <column id="20" parent="8" name="phone">
+      <mandatory>1</mandatory>
+      <data-type>char(32)|0</data-type>
+    </column>
+    <column id="21" parent="8" name="address">
+      <mandatory>1</mandatory>
+      <data-type>varchar(256)|0</data-type>
+    </column>
+    <key id="22" parent="8" name="PRIMARY">
+      <columns>admin_id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="23" parent="9" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="24" parent="9" name="course_name">
+      <mandatory>1</mandatory>
+      <data-type>char(32)|0</data-type>
+    </column>
+    <column id="25" parent="9" name="course_credit">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="26" parent="9" name="course_grade">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <key id="27" parent="9" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="28" parent="10" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="29" parent="10" name="professional_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="30" parent="10" name="course_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <key id="31" parent="10" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="32" parent="11" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="33" parent="11" name="academy_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="34" parent="11" name="pro_name">
+      <mandatory>1</mandatory>
+      <data-type>char(64)|0</data-type>
+    </column>
+    <column id="35" parent="11" name="year">
+      <mandatory>1</mandatory>
+      <data-type>char(3)|0</data-type>
+    </column>
+    <key id="36" parent="11" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="37" parent="12" name="stu_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="38" parent="12" name="academy_id">
+      <mandatory>1</mandatory>
+      <data-type>int(64)|0</data-type>
+    </column>
+    <column id="39" parent="12" name="professional_id">
+      <mandatory>1</mandatory>
+      <data-type>int(64)|0</data-type>
+    </column>
+    <column id="40" parent="12" name="grade">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="41" parent="12" name="name">
+      <mandatory>1</mandatory>
+      <data-type>char(32)|0</data-type>
+    </column>
+    <column id="42" parent="12" name="sex">
+      <mandatory>1</mandatory>
+      <data-type>char(1)|0</data-type>
+    </column>
+    <column id="43" parent="12" name="phone">
+      <data-type>char(32)|0</data-type>
+    </column>
+    <column id="44" parent="12" name="address">
+      <data-type>varchar(256)|0</data-type>
+    </column>
+    <key id="45" parent="12" name="PRIMARY">
+      <columns>stu_id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="46" parent="13" name="id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+      <sequence-identity>1</sequence-identity>
+    </column>
+    <column id="47" parent="13" name="account">
+      <mandatory>1</mandatory>
+      <data-type>char(16)|0</data-type>
+    </column>
+    <column id="48" parent="13" name="password">
+      <mandatory>1</mandatory>
+      <data-type>varchar(64)|0</data-type>
+    </column>
+    <column id="49" parent="13" name="role">
+      <mandatory>1</mandatory>
+      <data-type>char(1)|0</data-type>
+    </column>
+    <key id="50" parent="13" name="PRIMARY">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+  </database-model>
+</dataSource>
