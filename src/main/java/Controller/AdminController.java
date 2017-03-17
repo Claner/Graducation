@@ -15,6 +15,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("Admin")
+@CrossOrigin
 public class AdminController {
 
     @Autowired
@@ -496,8 +497,8 @@ public class AdminController {
     @RequestMapping(value = "/saveMoreProfessionalCourse", method = RequestMethod.POST)
     public Response saveMoreProfessionalCourse(@RequestParam("grade_id") int grade_id,
                                                @RequestParam("professional_id") int professional_id,
-                                               @RequestParam("course_id") int[] courses_id,
-                                               @RequestParam("times") String[] times) {
+                                               @RequestParam("course_id") String courses_id,
+                                               @RequestParam("times") String times) {
         switch (professionalCourseDao.saveMoreProfessionalCourse(grade_id, professional_id, courses_id, times)) {
             case Constant.SAVE_SUCCESS:
                 return builder.setCode(20000).setMessage("排课成功").build();

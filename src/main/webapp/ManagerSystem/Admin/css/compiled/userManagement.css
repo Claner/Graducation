@@ -1,0 +1,58 @@
+.content {
+  background-color: #fff;
+}
+.content span {
+	display: inline-block;
+	margin-left: 10%;
+	margin-top: 50px;
+	font-size: 25px;
+	font-family: "微软雅黑";
+}
+#addstaff {
+	background-color: #96BF48;
+	border:none;
+	color: #fff;
+	float: right;
+	margin-right: 10%;
+	margin-top: 50px;
+	width: 107px;
+	height: 33px;
+	border-radius: 5px;
+}
+.userlist {
+	width: 80%;
+	margin:20px auto;
+}
+.userlist table td,.userlist table th {
+	text-align: center;
+}
+.userlist table td button {
+	margin:0 10px;
+	background-color: #fff;
+	border:1px solid #ccc;
+	width: 60px;
+	height: 35px;
+	border-radius: 5px;
+}
+.userlist table th {
+	width: 50%;
+}
+.form-group {
+	margin-top: 20px;
+}
+.footbtn {
+	text-align: center;
+}
+.footbtn button {
+	width: 200px;
+	height: 35px;
+	border:none;
+	border-radius: 5px;
+	color: #fff;
+}
+#addbtn {
+	background-color: #96BF48;
+}
+#updatebtn {
+	background-color: #D44B47;
+}

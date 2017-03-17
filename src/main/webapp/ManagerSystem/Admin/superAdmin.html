@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>超级管理员</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/userManagement.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/home.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+    <style>
+        td{
+            min-width: 120px;
+        }
+        input[type='radio']{vertical-align:text-bottom;margin-bottom:-1px;*margin-bottom:-4px;}
+        .col-sm-5{
+            width:60px;
+            float:left;
+            margin-left: 20px;
+        }
+    </style>
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        <div id="sidebar-nav">
+            <ul id="dashboard-menu">
+                <li class="active">
+                    <a href="javascript::">
+                        <i class="icon-home"></i>
+                        <span>首页</span>
+                    </a>
+                </li>            
+            </ul>
+        </div>
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+        <div>
+            <span>管理员列表</span>
+            <button id="addstaff" data-toggle="modal" data-target="#addModal">
+                <i class="icon-plus"></i>
+                添加管理员
+            </button>
+        </div>
+
+        <div class="userlist">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>管理员姓名</th>
+                        <th>性别</th>
+                        <th>电话</th>
+                        <th>地址</th>
+                        <th>操作</th>
+
+                    </tr>
+                </thead>
+                <tbody id="tablelist">
+                    <!--插入列表-->
+                </tbody>
+            </table>
+        </div>
+        <div id="navigation">
+            <!--插入分页-->
+        </div>
+
+    </div>
+
+    <!-- addModal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">添加管理员</h4>
+          </div>
+
+          <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="addaccount" class="col-sm-3 control-label">管理员账号：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="addaccount" id="addaccount" placeholder="输入账号">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="addpassword" class="col-sm-3 control-label">管理员密码：</label>
+                    <div class="col-sm-9">
+                        <input type="password" name="addpassword" id="addpassword" placeholder="输入密码">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="addname" class="col-sm-3 control-label">管理员姓名：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="addname" id="addname" placeholder="输入姓名">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="addphone" class="col-sm-3 control-label">管理员电话：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="addphone" id="addphone" placeholder="输入电话">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="addaddress" class="col-sm-3 control-label">管理员地址：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="addaddress" id="addaddress" placeholder="输入地址">
+                    </div>
+                </div>
+                <div class="form-group clearfix">
+                    <label for="sexForm" class="col-sm-3 control-label">请选择性别：</label>
+                    <div class="col-sm-5">
+                        <input type="radio" class="form-control" name="sex" value="m">男
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="radio" class="form-control" name="sex" value="f">女
+                    </div>
+                </div>
+
+            </form>
+            <div class="footbtn">
+                <button id="addbtn" onclick="addstaff()">添加</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+
+    <script type="text/x-handlebars-template" id="table-template">
+        {{#each this.dataList}}
+            <tr>
+                <td>{{name}}</td>
+                {{#compare sex}}
+                <td>男</td>
+                {{else}}
+                <td>女</td>
+                {{/compare}}
+                <td>{{phone}}</td>
+                <td>{{address}}</td>
+                <td><button class="btn btn-danger" onclick="del({{adminId}})">删除</button></td>
+            </tr>
+        {{/each}}
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            getData(1);
+           
+        };
+
+        function getData(page){
+            var limit=10;
+            var data={
+                pageNo:page,
+                pageSize:limit
+            };
+            sew.post('/SuperAdmin/getAllAdmin',data,function (res){
+               var total_page=Math.ceil(res.data/limit);
+
+               var tableTpl = Handlebars.compile($("#table-template").html());
+                Handlebars.registerHelper("compare",function(value, options){
+                    if(value=='m'){
+                        return options.fn(this);
+                    }else if(value=='f'){
+                        return options.inverse(this);
+                    }
+                });
+                $("#tablelist").html(tableTpl(res));
+                makeNavigation(page,total_page,'getData',"navigation",2);
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+        }
+
+        function addstaff() {
+
+            sew.post("/SuperAdmin/addAdmin",{
+
+                account: $("#addaccount").val(),
+                password: $("#addpassword").val(),
+                name: $("#addname").val(),
+                phone: $("#addphone").val(),
+                address: $("#addaddress").val(),
+                sex:$("input[name='sex']:checked").val()
+
+            },function(res) {
+
+                notie.alert(3,"添加成功",2);
+
+                setTimeout('window.location.reload(true)',2000);
+
+            },function(err) {
+
+                notie.alert(3,err.msg,2);
+
+            });
+        }
+
+        function del(id){
+            swal({
+              title: "你确定要删除吗?",
+              text: "删除后不可恢复!",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "确认删除",
+              cancelButtonText: "取消删除",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm){
+              if (isConfirm) {
+                var data={
+                    id:id
+                };
+                sew.post('/SuperAdmin/deleteAdmin',data,function (res) {
+                     swal({
+                        title: "删除成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                });
+                
+              } else {
+                swal("取消删除成功", "", "error");
+              }
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+    </script>
+</body>
+</html>

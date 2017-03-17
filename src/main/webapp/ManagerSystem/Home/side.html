@@ -1,0 +1,55 @@
+<div id="sidebar-nav">
+    <ul id="dashboard-menu">
+        <li >
+            <a href="javascript:;">
+                <i class="icon-home"></i>
+                <span>首页</span>
+            </a>
+        </li>
+        <li>
+            <a href="studentInfo.html">
+                <i class="icon-user"></i>
+                <span>学生信息</span>
+            </a>
+        </li>   
+         <li>
+            <a href="selectableCourse.html">
+                <i class="icon-tags"></i>
+                <span>选课课表</span>
+            </a>
+        </li> 
+        <li>
+            <a href="studentCourse.html">
+                <i class="icon-heart"></i>
+                <span>我的课表</span>
+            </a>
+        </li>  
+         <li>
+            <a href="getStudentGrade.html">
+                <i class="icon-eye-open"></i>
+                <span>查询成绩</span>
+            </a>
+        </li>        
+    </ul>
+</div>
+<script src="../common/js/theme.js"></script>
+<script>
+    $(function (){
+        var arr=window.location.pathname.match(/\/(\w+).html?/);
+        var arrow='<div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>';
+        switch(arr[0]){
+            case '/studentInfo.html':
+                $("a[href='studentInfo.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/selectableCourse.html':
+                $("a[href='selectableCourse.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/studentCourse.html':
+                $("a[href='studentCourse.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/getStudentGrade.html':
+                $("a[href='getStudentGrade.html']").before(arrow).parent('li').addClass('active');
+                break;
+        }
+    });
+</script>

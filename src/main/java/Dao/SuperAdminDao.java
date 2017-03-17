@@ -28,9 +28,8 @@ public class SuperAdminDao {
             HibernateUtil.close();
             return true;
         } catch (Exception e) {
-            return false;
-        } finally {
             HibernateUtil.close();
+            return false;
         }
     }
 }

@@ -1,0 +1,210 @@
+.content {
+  background:url("../../img/bgs/map.png") no-repeat center;
+  background-color: #fff;
+}
+.box {
+	width: 90%;
+	min-height: 200px;
+	margin: 20px auto;
+	border:1px solid #DAE3E9;
+	overflow: hidden;
+}
+.box h3 {
+	margin: 20px 40px;
+	color:#98A6B7;
+}
+.box label {
+	font-weight: bold;
+}
+.boxBtn {
+	position: absolute;
+	width: 60px;
+	border-radius: 5px;
+	background-color: #fff;
+	border:none;
+	opacity: 0.4;
+}
+.boxBtn:hover {
+	opacity: 1;
+}
+.form-group {
+	margin-top: 20px;
+}
+.form-group select {
+	width: 100px;
+	height: 30px;
+	float: left;
+	margin-left: 10px;
+}
+.footbtn {
+	text-align: center;
+	margin-top: 60px;
+}
+.footbtn button {
+	width: 200px;
+	height: 35px;
+	border:none;
+	border-radius: 5px;
+	color: #fff;
+	margin-top: 20px;
+}
+.addbtn {
+	background-color: #96BF48;
+}
+/*mainbox*/
+.mainbox {
+	position: relative;
+}
+.mainbox img {
+	float: left;
+	width: 250px;
+	height: 250px;
+	margin: 0 40px;
+	border:1px solid #999;
+}
+.sample {
+	float: left;
+	min-width: 500px;
+	margin-top: 20px;
+	max-width: 550px;
+}
+.sample span {
+	display: inline-block;
+	width: 350px;
+}
+.sample label {
+	float: left;
+}
+.sample img {
+	width: 200px;
+	height: 143px;
+	margin: 0;
+	border:none;
+}
+.mainbox label {
+	display: inline-block;
+	min-width: 137px;
+	text-align: right;
+	margin-right: 10px;
+}
+.mainbox p {
+	font-size: 15px;
+}
+.cn_main,.en_main {
+	float: left;
+	margin-top: 20px;
+	display: inline-block;
+}
+.updateProduction {
+	bottom: 0;
+	right: 0;
+}
+/*mainbox*/
+
+/*contentbox*/
+.contentbox {
+	position: relative;
+	padding-bottom: 40px;
+}
+.boxheader {
+	text-align: center;
+	font-size: 14px;
+	font-weight: bold;
+}
+#editorone,#editortwo {
+	//height: 400px;
+}
+.slider-frame {
+	position: absolute;
+	left: 10px;
+	bottom: 5px;
+}
+.detail_main {
+	min-width: 750px;
+	margin-top: 20px;
+	margin-left: 40px;
+}
+.detail_main label {
+	width: 140px;
+	text-align: right;
+	margin-right: 20px;
+}
+.detail_main div {
+	width: 500px;
+	display: inline-block;
+	font-size: 16px;
+	margin-left: 180px;
+	margin-bottom: 20px;
+}
+.updateContent {
+	bottom: 0;
+	right: 5px;
+}
+/*contentbox*/
+
+/*photobox*/
+.photoboxli,.videoboxli {
+	position: relative;
+	overflow: hidden;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #DAE3E9;
+}
+.showphoto,.photoexplain,.showvideo,.videoexplain {
+	float:left;
+}
+.showphoto,.showvideo {
+	width:35%;
+	margin-bottom: 20px;
+}
+.showphoto img {
+	width: 250px;
+	height: 250px;
+	margin-left: 40px;
+}
+.showvideo video {
+	width: 260px;
+	height: 250px;
+	margin-left: 40px;
+}
+.photoexplain,.videoexplain {
+	width:60%;
+	margin-bottom: 20px;
+}
+.photoexplain label,.videoexplain label {
+	margin-top: 10px;
+}
+.photoexplain div,.videoexplain div {
+	font-size: 14px;
+	text-indent: 2em;
+	margin-bottom: 20px;
+}
+.updateExplain {
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+}
+.delphotoExplain,.delvideoExplain {
+	position: absolute;
+	bottom: 0;
+	right: 70px;
+}
+#updateExplainModal textarea,#addExplainModal textarea,#updatevideoExplainModal textarea,#addvideoModal textarea {
+	width: 90%;
+	min-height: 100px;
+	margin-left: 3%;
+}
+#addimg {
+	width: 250px;
+	height: 250px;
+	border:2px dashed #dee3e8;
+	margin-left: 40px;
+	margin-bottom: 20px;
+	cursor: pointer;
+}
+/*photobox*/
+
+/*上传样式*/
+#loadImg,#loadImg1,#loadImg2,#loadImg3,#loadImg4 {
+	margin: 10px auto;
+	display: none;
+}

@@ -3,6 +3,8 @@ package Dao;
 import Entity.ProfessionalCourseEntity;
 import Util.Constant;
 import Util.HibernateUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
@@ -35,20 +37,31 @@ public class ProfessionalCourseDao {
      * 管理员批量录入排课信息
      */
     @Transactional
-    public int saveMoreProfessionalCourse(int grade_id, int professional_id, int[] courses_id, String[] times) {
-        if (courses_id.length != times.length) return Constant.PARAMS_NOT_MATCH;
-        int size = courses_id.length;
+    public int saveMoreProfessionalCourse(int grade_id, int professional_id, String courses_id, String times) {
+        JSONArray courseArray = JSON.parseArray(courses_id);
+        JSONArray timeArray = JSON.parseArray(times);
+        Integer[] cArr = new Integer[courseArray.size()];
+        String[] tArr = new String[timeArray.size()];
+//        String[] cArr = courses_id.trim().split(",");
+//        String[] tArr = times.trim().split(",");
+        if (cArr.length != tArr.length) return Constant.PARAMS_NOT_MATCH;
+        int size = cArr.length;
         for (int i = 0; i < size; i++) {
-            if (!isMatch(times[i])) return Constant.PARAMS_NOT_MATCH;
-            if (professional_id == 0 && isArranged(grade_id, courses_id[i], times[i])) return Constant.HAS_EXIST;
-            if (isConflict(grade_id, professional_id, times[i])) return Constant.COURSE_CONFLICT;
+            cArr[i] = (Integer) courseArray.get(i);
+            tArr[i] = (String) timeArray.get(i);
         }
-        Session session = HibernateUtil.getSession();
         for (int i = 0; i < size; i++) {
-            session.save(new ProfessionalCourseEntity(grade_id, professional_id, courses_id[i], times[i]));
+            if (!isMatch(tArr[i])) return Constant.PARAMS_NOT_MATCH;
+            if (professional_id == 0 && isArranged(grade_id, cArr[i], tArr[i]))
+                return Constant.HAS_EXIST;
+            if (isConflict(grade_id, professional_id, tArr[i])) return Constant.COURSE_CONFLICT;
         }
-        HibernateUtil.commit();
-        HibernateUtil.close();
+        for (int i = 0; i < size; i++) {
+            Session session = HibernateUtil.getSession();
+            session.save(new ProfessionalCourseEntity(grade_id, professional_id, cArr[i], tArr[i]));
+            HibernateUtil.commit();
+            HibernateUtil.close();
+        }
         return Constant.SAVE_SUCCESS;
     }
 
@@ -57,14 +70,19 @@ public class ProfessionalCourseDao {
      * 判断时间参数是否合法
      */
     public boolean isMatch(String time) {
-        String[] strings = time.split(",");
-        for (String s : strings) {
-            String[] s1 = s.split("-");
-            if (Integer.parseInt(s1[0]) > 7 || Integer.parseInt(s1[1]) < 1
-                    || Integer.parseInt(s1[1]) < 1 || Integer.parseInt(s1[1]) > 5) {
-                return false;
-            }
+//        String[] strings = time.split(",");
+//        for (String s : strings) {
+        System.out.println(time);
+        String[] s1 = time.trim().split("-");
+        System.out.println(s1[0]);
+        System.out.println(s1[1]);
+        Integer week = Integer.parseInt(s1[0]);
+        Integer when = Integer.parseInt(s1[1].trim());
+        if (week > 7 || week < 1
+                || when < 1 || when > 5) {
+            return false;
         }
+//        }
         return true;
     }
 
@@ -80,7 +98,7 @@ public class ProfessionalCourseDao {
             HibernateUtil.close();
             return list;
         } else {
-            List<ProfessionalCourseEntity> list = query.setFetchSize((pageNo - 1) * pageSize).setMaxResults(pageSize).list();
+            List<ProfessionalCourseEntity> list = query.setFirstResult((pageNo - 1) * pageSize).setMaxResults(pageSize).list();
             HibernateUtil.close();
             return list;
         }

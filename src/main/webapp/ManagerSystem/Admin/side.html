@@ -1,0 +1,109 @@
+<div id="sidebar-nav">
+    <ul id="dashboard-menu">
+        <li >
+            <a href="javascript:;">
+                <i class="icon-home"></i>
+                <span>首页</span>
+            </a>
+        </li>
+        <li>
+            <a href="adminInfo.html">
+                <i class="icon-user"></i>
+                <span>管理员信息</span>
+            </a>
+        </li>     
+        <li>
+            <a class="dropdown-toggle" href="javscript:;" id="student" >
+                <i class="icon-group"></i>
+                <span>学生管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu student">
+                <li><a href="saveStudent.html">录入学生信息</a></li>
+                <li><a href="studentManager.html">学生信息管理</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="academy">
+                <i class="icon-hdd"></i>
+                <span>学院管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu academy">
+                <li><a href="saveAcademy.html">录入学院信息</a></li>
+                <li><a href="academyManager.html">学院信息管理</a></li>
+            </ul>
+        </li>
+        <li>
+            <a class="dropdown-toggle" href="#" id="professional">
+                <i class="icon-globe"></i>
+                <span>专业管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu professional">
+                <li><a href="saveProfessional.html">录入专业信息</a></li>
+                <li><a href="professionalManager.html">专业信息管理</a></li>
+            </ul>
+        </li>
+         <li>
+            <a class="dropdown-toggle" href="#" id="course">
+                <i class="icon-bookmark"></i>
+                <span>课程管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu course">
+                <li><a href="saveCourse.html">录入课程信息</a></li>
+                <li><a href="courseManager.html">课程信息管理</a></li>
+            </ul>
+        </li>
+         <li>
+            <a class="dropdown-toggle" href="#" id="pofessionalCourse">
+                <i class="icon-book"></i>
+                <span>排课管理</span>
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="submenu pofessionalCourse">
+                <li><a href="savePofessionalCourse.html">录入排课信息</a></li>
+                <li><a href="pofessionalCourseManager.html">排课信息管理</a></li>
+            </ul>
+        </li>
+       
+    </ul>
+</div>
+<script src="../common/js/theme.js"></script>
+<script>
+    $(function (){
+        var arr=window.location.pathname.match(/\/(\w+).html?/);
+        var arrow='<div class="pointer"><div class="arrow"></div><div class="arrow_border"></div></div>';
+        switch(arr[0]){
+            case '/adminInfo.html':
+                $("a[href='adminInfo.html']").before(arrow).parent('li').addClass('active');
+                break;
+            case '/saveStudent.html':
+            case '/studentManager.html':
+                $("#student").before(arrow).parent('li').addClass('active');
+                $(".student").addClass('active');
+                break;
+            case '/saveAcademy.html':
+            case '/academyManager.html':
+                $("#academy").before(arrow).parent('li').addClass('active');
+                $(".academy").addClass('active');
+                break;
+            case '/saveProfessional.html':
+            case '/professionalManager.html':
+                $("#professional").before(arrow).parent('li').addClass('active');
+                $(".professional").addClass('active');
+                break;
+            case '/saveCourse.html':
+            case '/courseManager.html':
+                 $("#course").before(arrow).parent('li').addClass('active');
+                 $(".course").addClass('active');
+                 break;
+            case '/savePofessionalCourse.html':
+            case '/pofessionalCourseManager.html':
+                 $("#pofessionalCourse").before(arrow).parent('li').addClass('active');
+                 $(".pofessionalCourse").addClass('active');
+                 break;
+        }
+    });
+</script>

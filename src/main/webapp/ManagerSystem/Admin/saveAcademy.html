@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 录入学院信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/userManagement.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/saveStudent.css">
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+        <div>
+            <span>录入学院</span>
+        </div>
+
+       <div class="one-level addBox">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="academy_name" class="col-sm-3 control-label">请输入学院名称：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="account" id="academy_name" placeholder="请输入学院名称">
+                    </div>
+                </div>
+            </form>
+            <button id="firstAdd">点击添加</button>
+        </div>
+    </div>
+
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+
+   
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+            $("#firstAdd").on("click",function () {
+                
+                data={
+                   academy_name:$("#academy_name").val()
+                };
+
+                sew.post('/Admin/saveAcademy',data,function (res){
+                     swal({
+                        title: res.message,
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                },function (err){
+                    swal(err.message,"","error");
+                });
+
+            });
+
+        };
+
+    </script>
+</body>
+</html>

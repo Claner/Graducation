@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 学生信息管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/productionList.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/home.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+    <style>
+        
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+       <div>
+            <span class="title">学生信息管理</span>
+            <div class="form">
+                查找学生<input type="text" id="search-text" placeholder="请输入学生姓名"  onkeydown="keyDown()" />
+                <span id="submit"></span>
+            </div>
+        </div>
+        <div class="list">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>学生ID</th>
+                        <th>姓名</th>
+                        <th>电话</th>
+                        <th>地址</th>
+                        <th>学院</th>
+                        <th>专业</th>
+                        <th>性别</th>
+                        <th>学期</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tablelist">
+                    <!--插入列表-->
+                </tbody>
+            </table>
+        </div>
+        <div id="navigation">
+            <!--插入分页-->
+        </div>
+
+    </div>
+     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改学生信息</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+                 <div class="form-group" style="display: none;">
+                    <label for="addname_cn" class="col-sm-3 control-label">id：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="stuId">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="academy_id" class="col-sm-3 control-label">请选择学院：</label>
+                    <div class="col-sm-9 clearfix">
+                        <select name="academy_id" id="academy_id" class="form-control" >
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="professional_id" class="col-sm-3 control-label">请选择专业：</label>
+                    <div class="col-sm-9">
+                        <select name="professional_id" id="professional_id" class="form-control" >
+                        </select>
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="grade" class="col-sm-3 control-label">请选择年级：</label>
+                    <div class="col-sm-9">
+                        <select name="grade" id="grade" class="form-control" >
+                            <option value="1">大一上</option>
+                            <option value="2">大一下</option>
+                            <option value="3">大二上</option>
+                            <option value="4">大二下</option>
+                            <option value="5">大三上</option>
+                            <option value="6">大三下</option>
+                            <option value="7">大四上</option>
+                            <option value="8">大四下</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div class="footbtn">
+                <button id="addbtn" onclick="modifyStudent()">确认修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+    <script src="js/getInfo.js"></script>
+
+    <script type="text/x-handlebars-template" id="academy-template">
+        {{#each this}}
+            <option value="{{id}}">{{academyName}}</option>
+        {{/each}}
+    </script>
+
+     <script type="text/x-handlebars-template" id="professional-template">
+        {{#each this}}
+            <option value="{{id}}">{{proName}}</option>
+        {{/each}}
+    </script>
+    <script type="text/x-handlebars-template" id="table-template">
+        {{#each this}}
+       <tr>
+           <td>{{stuId}}</td>
+           <td>{{name}}</td>
+           <td>{{phone}}</td>
+           <td>{{address}}</td>
+           <td>{{academyName}}</td>
+           <td>{{professionalName}}</td>
+            {{#compare sex}}
+            <td>男</td>
+            {{else}}
+            <td>女</td>
+            {{/compare}}
+            <td>{{grade}}</td>
+            <td>
+                <button class="btn btn-info" onclick="changeInfo({{stuId}})" data-toggle="modal" data-target="#addModal">修改</button>
+                <button class="btn btn-danger" onclick="deleteInfo({{stuId}})" >删除</button>
+            </td>
+       </tr>
+       {{/each}}
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+
+            getData(1);
+
+             $("#academy_id").on("change",function (){
+                $("#professional_id").html("");
+                getProfessional();
+            });
+
+        };
+
+        function getData(page){
+            var limit=8;
+            var data={
+                pageNo:page,
+                pageSize:limit
+            };
+            sew.post('/Admin/getAllStudentInfo',data,function (res){
+               if(res.dataList.length<=0){
+                $(".list").html('<div class="text-center" style="color:red;font-size:16px;">目前没有学生，请录入学生</div>');
+                return;
+               }
+               var total_page=Math.ceil(res.data/limit);
+
+               var tableTpl = Handlebars.compile($("#table-template").html());
+
+                Handlebars.registerHelper("compare",function(value, options){
+                    if(value=='m'){
+                        return options.fn(this);
+                    }else if(value=='f'){
+                        return options.inverse(this);
+                    }
+                });
+                $("#tablelist").html(tableTpl(res.dataList));
+                makeNavigation(page,total_page,'getData',"navigation",2);
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+        }
+
+        //修改学生信息
+        function changeInfo(stuId){
+            $("#stuId").val(stuId);
+            getAcademy();
+
+        }
+
+        //删除学生
+        function deleteInfo(stuId) {
+            swal({
+              title: "你确定要删除吗?",
+              text: "删除后不可恢复!",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "确认删除",
+              cancelButtonText: "取消删除",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm){
+              if (isConfirm) {
+                var data={
+                    stu_id:stuId
+                };
+                sew.post('/Admin/deleteStudent',data,function (res) {
+                     swal({
+                        title: "删除成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                });
+                
+              } else {
+                swal("取消删除成功", "", "error");
+              }
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+        function modifyStudent(){
+            var data={
+                stu_id:$("#stuId").val(),
+                academy_id:$("#academy_id").val(),
+                professional_id:$("#professional_id").val(),
+                grade:$("#grade").val()
+            };
+
+            sew.post("/Admin/modifyStudent",data,function (res){
+                  swal({
+                        title: "提交成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+        
+
+    </script>
+</body>
+</html>

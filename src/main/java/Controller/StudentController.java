@@ -20,6 +20,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("Student")
+@CrossOrigin
 public class StudentController {
 
     @Autowired
@@ -291,7 +292,7 @@ public class StudentController {
                     JSONArray jsonArray = allJsonArray.getJSONArray(i);
                     for (int j = 0; j < jsonArray.size(); j++) {
                         StudentScore studentScore = new StudentScore();
-                        JSONObject object = jsonArray.getJSONObject(0);
+                        JSONObject object = jsonArray.getJSONObject(j);
                         studentScore.setNumber(object.getString("number"));
                         studentScore.setName(object.getString("name"));
                         studentScore.setType(object.getString("type"));

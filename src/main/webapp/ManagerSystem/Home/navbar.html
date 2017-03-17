@@ -1,0 +1,73 @@
+<div class="navbar navbar-inverse">
+    <div class="navbar-inner">
+        <button type="button" class="btn btn-navbar visible-phone" id="menu-toggler">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <a class="brand" href="javascript:;" id="admin_name"></a>
+
+        <ul class="nav pull-right">
+            <li class="dropdown">
+                <a href="javascript:;">
+                    <i class="icon-user"></i>
+                    <span id="account"></span>
+                    <!-- <b class="caret"></b> -->
+                </a>
+            </li>
+            <li class="settings hidden-phone" id="changePassword">
+                <a href="javascript:void(0);" role="button" id="" data-toggle="modal" data-target="#modifyPassword">
+                    修改密码
+                </a>
+            </li>
+            <li class="settings hidden-phone">
+                <a href="javascript:void(0);" role="button" id="loginout">
+                    退出登录
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="modal fade" id="modifyPassword" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="pre_password" class="col-sm-3 control-label">请输入旧密码：</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" name="pre_password" id="pre_password" placeholder="请输入旧密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password" class="col-sm-3 control-label">请输入新密码：</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" name="new_password" id="new_password" placeholder="请输入新密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comfirmpwd" class="col-sm-3 control-label">请输入确认密码：</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" name="comfirmpwd" id="comfirmpwd" placeholder="请输入确认密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <p class="error-info"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" id="modify">提交</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="../common/js/loginstatus.js"></script>

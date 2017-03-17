@@ -65,7 +65,7 @@ public class AdminDao {
      */
     public boolean saveAdmin(int admin_id, String name, String sex, String phone, String address) {
         Session session = HibernateUtil.getSession();
-        session.save(new AdminEntity(admin_id,name,sex,phone,address));
+        session.save(new AdminEntity(admin_id, name, sex, phone, address));
         HibernateUtil.commit();
         HibernateUtil.close();
         return true;
@@ -83,5 +83,17 @@ public class AdminDao {
                 .list();
         HibernateUtil.close();
         return list;
+    }
+
+    /**
+     * 获取所有管理员数量
+     */
+    public long getCount() {
+        Session session = HibernateUtil.getSession();
+        String hql = "select count(*) from AdminEntity ";
+        Query query = session.createQuery(hql);
+        long i = ((Long) query.uniqueResult()).intValue();
+        HibernateUtil.close();
+        return i;
     }
 }

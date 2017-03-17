@@ -5,10 +5,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.json.JsonObject;
 import java.io.IOException;
@@ -18,61 +17,33 @@ import java.io.IOException;
  */
 @RestController
 @RequestMapping("Test")
+@CrossOrigin
 public class TestController {
 
-    @RequestMapping(value = "/test", method = RequestMethod.POST)
+    @Autowired
+    private Response.Builder builder;
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
     public Response test() {
 
-        String url = "http://wyugrade.bensonwu.cn/Home/Student/getStudentGrade";
-
         try {
-            Document document = Jsoup.connect(url)
-                    .timeout(36000)
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
-                    .header("Accept-Encoding", "gzip, deflate, sdch")
-                    .header("Accept-Language", "zh-CN,zh;q=0.8")
-                    .header("Connection", "keep-alive")
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36")
-                    .data("student_num", "3114002414")
-                    .data("password", "950725")
-                    .ignoreContentType(true)
-                    .post();
+            Document document = Jsoup.connect("http://www.wyu.edu.cn/")
+                    .header("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                    .header("Accept-Encoding","gzip, deflate, sdch")
+                    .header("Accept-Language","zh-CN,zh;q=0.8")
+                    .header("Cache-Contro","max-age=0")
+                    .header("Connection","keep-alive")
+                    .header("Cookie","safedog-flow-item=F18B78FF927EA883ED8AFE26F73E2FB8; ASPSESSIONIDAQABRQBC=OHCJIIIAJOELOHEKKGIGKEAC; fontsize=1")
+                    .get();
 
-            String json = document.body().text();
-
+            Elements elements = document.getElementsByClass("wyu-box-item");
+            for (int i =0;i<elements.size();i++){
+                System.out.println(elements.get(i).select("a[href]").text());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-//        try {
-//            Document doc = Jsoup.connect("http://jwc.wyu.edu.cn/student/logon.asp")
-//                    .timeout(3000)
-//                    .userAgent("test")
-//                    .cookie("auth", "token")
-//                    .data("UserCode", "3115001734")
-//                    .data("UserPwd", "Lm123456")
-//                    .data("Validate", "0312")
-//                    .post();
-//            String text = doc.body().text();
-//            System.out.println("转码前：" + text);
-//            String str = new String(text.getBytes(), "gbk");
-//            System.out.println("转码后：" + str);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-        return null;
-    }
-
-    @RequestMapping(value = "/getStudentGrade", method = RequestMethod.POST)
-    public Response getStudentGrade(@RequestParam("student_num") String[] student_num,
-                                    @RequestParam("password") String[] password) {
-        for (String s : student_num) {
-            System.out.println(s);
-        }
-        for (String s : password) {
-            System.out.println(s);
-        }
-        return null;
+        return builder.setCode(20000).setMessage("测试").build();
     }
 }

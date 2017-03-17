@@ -1,0 +1,43 @@
+.content {
+  background-color: #fff;
+}
+.content span {
+	display: inline-block;
+	margin-left: 10%;
+	margin-top: 50px;
+	font-size: 25px;
+	font-family: "微软雅黑";
+}
+#addproductClassification{
+	background-color: #96BF48;
+	border:none;
+	color: #fff;
+	float: right;
+	margin-right: 10%;
+	margin-top: 50px;
+	width: 120px;
+	height: 33px;
+	line-height: 33px;
+	text-align: center;
+	border-radius: 5px;
+	text-decoration: none;
+}
+.productlist {
+	width: 80%;
+	margin:20px auto;
+}
+.productlist table {
+	border-color: #ccc;
+}
+.productlist table td,.productlist table th {
+	text-align: center;
+	position: relative;
+	border-top-color: #ccc;
+	border-left-color: #ccc;
+}
+.productlist table th {
+	width: 50%;
+}
+.productlist table td a {
+	cursor: pointer;
+}

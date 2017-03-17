@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>学生课表</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/productionList.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/home.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+       <div>
+            <span class="title">当前年级的课表</span>
+           	 <select name="grade" id="grade" class="form-control" style="height:40px;float:right;margin-top:38px;margin-right: 58px;">
+                <option value="1">大一上</option>
+                <option value="2">大一下</option>
+                <option value="3">大二上</option>
+                <option value="4">大二下</option>
+                <option value="5">大三上</option>
+                <option value="6">大三下</option>
+                <option value="7">大四上</option>
+                <option value="8">大四下</option>
+            </select>
+        </div>
+        <div class="list">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>课程名称</th>
+                        <th>课程类型</th>
+                        <th>上课时间</th>
+                        <th>上课年级</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tablelist">
+                    <!--插入列表-->
+                </tbody>
+            </table>
+        </div>
+        <div id="navigation">
+            <!--插入分页-->
+        </div>
+
+    </div>
+     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改课程信息</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group" style="display: none;">
+                    <label for="addname_cn" class="col-sm-3 control-label">id：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="stuId">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="course_name" class="col-sm-3 control-label">课程名称：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="course_name">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="course_credit" class="col-sm-3 control-label">学分：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="course_credit">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="course_hour" class="col-sm-3 control-label">学时：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="course_hour">
+                    </div>
+                </div>
+            </form>
+            <div class="footbtn">
+                <button id="addbtn" onclick="modifyCourseInfo()">确认修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+
+    <script type="text/x-handlebars-template" id="table-template">
+       {{#each this}}
+       <tr>
+            <td>{{courseName}}</td>
+            <td>{{professionalName}}</td>
+            <td>{{timeFilter time}}</td>
+            <td>{{grade}}</td>
+            <td>
+            	{{#professionalTest professionalId}}
+            	<button class="btn btn-danger" onclick="deleteCourse({{id}})">退课</button>
+            	{{/professionalTest}}
+            </td>
+       </tr>
+       {{/each}}
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+            
+             sew.post('/Student/getStudentCourse',null,function (res){
+                if(res.dataList.length<=0){
+                $(".list").html('<div class="text-center" style="color:red;font-size:16px;">目前没有课程</div>');
+                return;
+               }
+
+               var tableTpl = Handlebars.compile($("#table-template").html());
+
+                Handlebars.registerHelper("professionalTest",function(value, options){
+                    if(value=='0'){
+                        return options.fn(this);
+                    }else if(value=='1'){
+                        return options.inverse(this);
+                    }
+                });
+
+                Handlebars.registerHelper("timeFilter",function(value){
+                   var arr=value.split('-');
+                   var week='';
+                   var day='';
+                   switch (arr[0]) {
+                        case '1':
+                           week="星期一";
+                           break;
+                        case '2':
+                           week="星期二";
+                           break;
+                        case '3':
+                           week="星期三";
+                           break;
+                        case '4':
+                           week="星期四";
+                           break;
+                        case '5':
+                           week="星期五";
+                           break;
+                        case '6':
+                           week="星期六";
+                           break;
+                        case '7':
+                           week="星期日";
+                           break;
+                   }
+                   switch (arr[1]) {
+                        case '1':
+                           day="第一大节";
+                           break;
+                        case '2':
+                           day="第二大节";
+                           break;
+                        case '3':
+                           day="第三大节";
+                           break;
+                        case '4':
+                           day="第四大节";
+                           break;
+                        case '5':
+                           day="第五大节";
+                           break;
+                        case '6':
+                           day="第六大节";
+                           break;
+                   }
+                   return week+day;
+                });
+                $("#tablelist").html(tableTpl(res.dataList));
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+            
+            $("#grade").on("change",function () {
+            	$("#grade").addClass("disabled");
+
+            	var data={
+            		grade_id:$("#grade").val()
+            	};
+            	sew.post('/Student/getStudentCourseByGradeId',data,function (res){
+
+            	},function (err){
+            		swal(err.message,"","error");
+            	},function (){
+            		$("#grade").removeClass("disabled");
+            		
+            	});
+            });
+
+        };
+
+
+        function deleteCourse(arrange_id) {
+            swal({
+              title: "你确定要退掉这门课吗?",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "确认",
+              cancelButtonText: "取消",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm){
+              if (isConfirm) {
+                var data={
+                    arrange_id:arrange_id
+                };
+                sew.post('/Student/deleteCourse',data,function (res) {
+                     swal({
+                        title: "退课成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                },function (err){
+            	
+	                swal(err.message,"","error");
+	            });
+                
+              } else {
+                swal("取消成功", "", "error");
+              }
+            });
+        }
+
+    </script>
+</body>
+</html>

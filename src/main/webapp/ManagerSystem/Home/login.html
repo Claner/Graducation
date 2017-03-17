@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html class="login-bg">
+<head>
+	<title>学生登录</title>
+    <meta charset="utf-8">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" type="text/css" href="../common/css/lib/font-awesome.css" />
+    <link rel="stylesheet" href="css/compiled/signin.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="../common/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+</head>
+<body>
+
+    <div class="row-fluid login-wrapper">
+
+        <div class="logo"></div>
+
+        <div class="span4 box">
+
+            <div class="content-wrap">
+
+                <h6>学生登录</h6>
+                <div class="col-sm-12 text-left">
+                    <div style="width:90%;margin:auto">用户名:</div>
+                </div>
+                <div class="col-sm-12">
+                    <input class="account" type="text" placeholder="输入您的账号" value="3113002361" />
+                </div>
+                <div class="col-sm-12 text-left">
+                    <div style="width:90%;margin:auto">密码:</div>
+                </div>
+                <div class="col-sm-12">
+                    <input class="password" type="password" value="123456" placeholder="输入您的密码" />
+                </div>
+                <div class="col-sm-12 clearfix">
+                    <div class="col-sm-6">
+                        <input style="width:100%;" class="verificationCode" type="text" placeholder="输入验证码" />
+                    </div>
+                    <div class="col-sm-6">
+                        <img style="width:100%;height:100%" src="" alt="" id="VerificationCode">
+                    </div>
+                </div>
+
+                <a class="btn-glow primary login" href="javascript:void(0)"><button style="width:200px;" class="btn btn-success">登录</button></a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+<!-- scripts -->
+<script src="../common/js/jquery.min.js"></script>
+<script src="../common/js/bootstrap.min.js"></script>
+<script src="../common/js/jquery.cookie.min.js"></script>
+<script src="../common/js/sewsrc.js"></script>
+<script src="../common/js/notie.js"></script>
+<script src="../common/js/sweet-alert.js"></script>
+<script type="text/javascript">
+
+    $(".login").on("click",function() {
+
+        var acc = $(".account").val();
+
+        var pwd = $(".password").val();
+
+        var code=$(".verificationCode").val();
+
+        if (acc === '' || pwd === ''|| code==='') {
+            swal({
+                title: "登陆信息不全或者输入有误!",
+                text: "",
+                type: "warning",
+                allowOutsideClick:false,
+                closeOnConfirm: false
+            });
+            return false;
+            
+        }
+        var data={
+            account: acc,
+            password: pwd,
+            verificationCode:code
+        };
+        
+        sew.post('/User/login',{
+
+            account: acc,
+            password: pwd,
+            verificationCode:code
+
+        },function(res) {
+
+            console.log(res);
+            $.cookie("account",acc,{
+                path:"/"
+            });
+            $.cookie("role",res.data.role,{
+                path:"/"
+            });
+
+            swal({
+                title: "登录成功!",
+                text: "",
+                type: "success",
+                confirmButtonText: "进入",
+                closeOnConfirm: false
+            },function (){
+                if($.cookie('role')==1){
+                    window.location.href = "studentInfo.html";
+                }
+                
+            });
+
+        },function(err) {
+            swal(err.message,"","error");
+            $("#VerificationCode").attr('src',sew.base_url+"/User/getVerificationCode?"+Math.random());
+
+        });
+    });
+
+
+    $("#VerificationCode").on("click",function () {
+        $(this).attr('src',sew.base_url+"/User/getVerificationCode?"+Math.random());
+    });
+
+
+    $("#VerificationCode").click();
+
+</script>
+</html>

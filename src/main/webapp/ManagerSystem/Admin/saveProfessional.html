@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 录入专业信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/userManagement.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/saveStudent.css">
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+        <div>
+            <span>录入专业信息</span>
+        </div>
+
+       <div class="one-level addBox">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="academy_id" class="col-sm-3 control-label">请选择学院：</label>
+                    <div class="col-sm-9">
+                        <select name="academy_id" id="academy_id" class="form-control" >
+                        </select>
+                    </div>
+                </div>
+               <div class="form-group">
+                    <label for="professional_name" class="col-sm-3 control-label">输入专业名称：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="professional_name" id="professional_name" placeholder="输入专业名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="year" class="col-sm-3 control-label">请选择学年：</label>
+                    <div class="col-sm-9">
+                        <select name="year" id="year" class="form-control" >
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <button id="firstAdd"><i class="icon-plus"></i>录入提交</button>
+        </div>
+    </div>
+
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+
+
+    <script type="text/x-handlebars-template" id="academy-template">
+        {{#each this}}
+            <option value="{{id}}">{{academyName}}</option>
+        {{/each}}
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+            getAcademy();
+            $("#firstAdd").on("click",function () {
+                
+                data={
+                   
+                    academy_id:$("#academy_id").val(),
+                    year:$("#academy_id	").val(),
+                    professional_name:$("#professional_name").val()
+                };
+
+                sew.post('/Admin/saveProfessional',data,function (res){
+                     swal({
+                        title: "提交成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                },function (err){
+                    swal(err.message,"","error");
+                });
+
+            });
+
+        };
+        function getAcademy(){
+		    var data={
+		        pageNo:0,
+		        pageSize:0
+		    };
+		    sew.post('/Admin/getAllAcademy',data,function (res){
+		        $("#professional_id").html('<option>专业获取中...</option>');
+		        var academyTpl = Handlebars.compile($("#academy-template").html());
+
+		        $("#academy_id").html(academyTpl(res.dataList));
+		        
+
+		    },function (err){
+		         swal(err.message,"","error");
+		    });
+		}
+    </script>
+</body>
+</html>

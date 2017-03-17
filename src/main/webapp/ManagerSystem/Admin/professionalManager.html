@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 专业信息管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/productionList.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/home.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+    <link rel="stylesheet" href="css/compiled/saveStudent.css">
+    <style>
+        .addBox {
+            min-height:30px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+        
+       <div>
+            <span class="title">专业信息管理</span>
+        </div>
+         <div class="one-level addBox">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="academy_name" class="col-sm-3 control-label">请选择学院名称：</label>
+                    <div class="col-sm-9">
+                         <select name="academy_id" id="academy_id" class="form-control" >
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <button id="firstAdd">查找专业</button>
+        </div>
+        <div class="list">
+            <table class="table table-bordered">
+               
+            </table>
+        </div>
+        <div id="navigation">
+            <!--插入分页-->
+        </div>
+
+    </div>
+     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改专业信息</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group" style="display: none;">
+                    <label for="addname_cn" class="col-sm-3 control-label">id：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="id">
+                    </div>
+                </div>
+                 <div class="form-group" style="display: none;">
+                    <label for="addname_cn" class="col-sm-3 control-label">academy_id：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="academy_id">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pro_Name" class="col-sm-3 control-label">专业名字：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="pro_Name">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="year" class="col-sm-3 control-label">学年：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="year">
+                    </div>
+                </div>
+            </form>
+            <div class="footbtn">
+                <button id="addbtn" onclick="modifyAcademyInfo()">确认修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+    
+    <script type="text/x-handlebars-template" id="academy-template">
+        <option value="0">所有专业</option>
+        {{#each this}}
+            <option value="{{id}}">{{academyName}}</option>
+        {{/each}}
+    </script>
+
+    <script type="text/x-handlebars-template" id="table-template">
+         <thead>
+            <tr>
+                <th>专业ID</th>
+                <th>专业名称</th>
+                <th>学年</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="tablelist">
+        {{#each this}}
+       <tr>
+            <td>{{id}}</td>
+            <td>{{proName}}</td>
+            <td>{{year}}</td>
+            <td>
+                <button class="btn btn-info" onclick="changeInfo({{id}},'{{academyId}}','{{proName}}','{{year}}')" data-toggle="modal" data-target="#addModal">修改</button>
+                <button class="btn btn-danger" onclick="deleteInfo({{id}})" >删除</button>
+            </td>
+       </tr>
+       {{/each}}
+        </tbody>
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+
+            sew.post('/Admin/getAllAcademy',{
+                pageNo:0,
+                pageSize:0
+            },function (res){
+                var academyTpl = Handlebars.compile($("#academy-template").html());
+
+                $("#academy_id").html(academyTpl(res.dataList));
+
+            },function (err){
+                swal(err.message,"","error");
+            });
+
+            $("#firstAdd").on("click",function () {
+                /* body... */
+                $(".table").html("");
+                $(".navigation").empty();
+                if($("#academy_id").val()==0){
+                     getData(1);
+                 }else{
+                    var data={
+                        academy_id:$("#academy_id").val()
+                    };
+                     sew.post('/Admin/getTargetProfessional',data,function (res){
+
+                       var tableTpl = Handlebars.compile($("#table-template").html());
+                        $(".table").html(tableTpl(res.dataList));
+
+                    },function (err){
+                         swal(err.message,"","error");
+                    });
+                 }
+            });
+
+
+        };
+        function getData(page){
+            sew.post('/Admin/getAllProfessional',{
+                pageNo:page,
+                pageSize:8
+            },function (res){
+               var total_page=Math.ceil(res.data/8);
+
+               var tableTpl = Handlebars.compile($("#table-template").html());
+                $(".table").html(tableTpl(res.dataList));
+                makeNavigation(page,total_page,'getData',"navigation",2);
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+        }
+
+        function changeInfo(id,academyId,proName,year){
+            $("#id").val(id);
+            $("#academy_id").val(academyId);
+            $("#pro_Name").val(proName);
+            $("#year").val(year);
+        }
+
+        function deleteInfo(id) {
+            swal({
+              title: "你确定要删除吗?",
+              text: "删除后不可恢复!",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "确认删除",
+              cancelButtonText: "取消删除",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm){
+              if (isConfirm) {
+                var data={
+                    id:id
+                };
+                sew.post('/Admin/deleteProfessional',data,function (res) {
+                     swal({
+                        title: "删除成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                });
+                
+              } else {
+                swal("取消删除成功", "", "error");
+              }
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+        function modifyAcademyInfo(){
+            var data={
+               academy_id:$("#academy_id").val(),
+               pro_name:$("#pro_Name").val(),
+               year:$("#year").val(),
+               id:$("#id").val(),
+            };
+            sew.post("/Admin/modifyProfessionalInfo",data,function (res){
+                  swal({
+                        title: "提交成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+        
+
+    </script>
+</body>
+</html>

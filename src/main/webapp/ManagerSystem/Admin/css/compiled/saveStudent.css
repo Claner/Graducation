@@ -1,0 +1,64 @@
+.content {
+  background-color: #fff;
+}
+.addBox {
+	width: 80%;
+	min-height: 200px;
+	margin: 50px auto;
+}
+input[type='radio']{vertical-align:text-bottom;margin-bottom:-1px;*margin-bottom:-4px;}
+.col-sm-5{
+	width:60px;
+	float:left;
+	margin-left: 20px;
+}
+.addBox p {
+	font-size: 20px;
+	font-family: "微软雅黑";
+}
+.addBox form {
+	margin: 20px auto;
+	width: 80%;
+}
+.addBox .form-group {
+	margin-top: 20px;
+	clear: both;
+}
+.addBox .form-group input{
+	width: 400px;
+	height: 30px;
+}
+.addBox .form-group select{
+	width: 414px;
+	height: 40px;
+}
+.form-sex{
+	margin-top: 20px;
+	clear: both;
+	line-height:25px;
+
+}
+#firstAdd,#secondAdd {
+	border:none;
+	background-color: #96BF48;
+    width: 300px;
+	height: 33px;
+    border-radius: 5px;
+    color:#fff;
+    margin:auto;
+    display: block;
+}
+.listTitle {
+	font-size: 15px;
+	margin-left: 45px;
+}
+.list {
+	list-style: none;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+.list li {
+	display: inline-block;
+	float: left;
+	margin: 10px 20px;
+}

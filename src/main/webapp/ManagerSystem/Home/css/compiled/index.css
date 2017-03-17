@@ -1,0 +1,12 @@
+.content {
+  background:url("../../img/bgs/map.png") no-repeat center;
+  text-align: center;
+}
+.content img {
+  margin-top: 100px;
+}
+.content p {
+  font-size: 30px;
+  font-family: "微软雅黑";
+  margin-top: 100px;
+}

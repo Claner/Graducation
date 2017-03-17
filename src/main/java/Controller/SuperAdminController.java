@@ -16,7 +16,8 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("SuperAdmin")
-public class SuperAdminController{
+@CrossOrigin
+public class SuperAdminController {
 
     @Autowired
     private Response.Builder builder;
@@ -71,9 +72,10 @@ public class SuperAdminController{
     @RequestMapping(value = "/getAllAdmin", method = RequestMethod.POST)
     public Response getAllAdmin(@RequestParam("pageNo") int pageNo,
                                 @RequestParam("pageSize") int pageSize) {
+        long size = adminDao.getCount();
         List<AdminEntity> list = adminDao.getAllAdmin(pageNo, pageSize);
         if (list != null && list.size() > 0) {
-            return builder.setCode(20000).setMessage("获取数据成功").setDataList(list).build();
+            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(list).build();
         } else {
             return builder.setCode(40000).setMessage("没有数据").build();
         }

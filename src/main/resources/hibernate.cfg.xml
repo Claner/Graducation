@@ -30,6 +30,7 @@
         <!--使显示的sql格式化-->
         <property name="format_sql">true</property>
         <property name="hbm2ddl.auto">update</property>
+
         <mapping class="Entity.AcademyEntity"/>
         <mapping class="Entity.AdminEntity"/>
         <mapping class="Entity.ProfessionalEntity"/>

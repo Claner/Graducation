@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 管理员信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/userManagement.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/home.css">
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+        <div>
+            <span>管理员信息</span>
+            <button id="addstaff"  data-toggle="modal" data-target="#addModal">
+                修改信息
+            </button>
+        </div>
+
+        <div class="userlist">
+            <table class="table table-bordered">
+                    
+                <tbody id="tablelist">
+                    <!--插入列表-->
+                    
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- addModal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+          </div>
+
+          <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="name" class="col-sm-3 control-label">姓名：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="name" id="name" placeholder="输入姓名">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="phone" class="col-sm-3 control-label">电话：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="phone" id="phone" placeholder="输入电话">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="address" class="col-sm-3 control-label">地址：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="address" id="address" placeholder="输入地址">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="sex" class="col-sm-3 control-label">性别：</label>
+                    <div class="col-sm-9 clearfix">
+                        <div class="col-sm-6">
+                            <input type="radio" class="wid" value="m" name="sex">男
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="radio" class="wid" value="f" name="sex">女
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="footbtn">
+                <button id="addbtn" onclick="modifyAdminInfo()">修改</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+
+    <script type="text/x-handlebars-template" id="table-template">
+        <tr>
+            <td>姓名</td>
+            <td>{{data.name}}</td>
+        </tr>
+        <tr>
+            <td>电话</td>
+            <td>{{data.phone}}</td>
+        </tr>
+        <tr>
+            <td>性别</td>
+            {{#compare data.sex}}
+            <td>男</td>
+            {{else}}
+            <td>女</td>
+            {{/compare}}
+        </tr>
+        <tr>
+            <td>地址</td>
+            <td>{{data.address}}</td>
+        </tr>
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+
+            sew.post('/Admin/getAdminInfo',null,function (res){
+
+                var tableTpl = Handlebars.compile($("#table-template").html());
+
+                Handlebars.registerHelper("compare",function(value, options){
+                    if(value=='m'){
+                        return options.fn(this);
+                    }else if(value=='f'){
+                        return options.inverse(this);
+                    }
+                });
+
+
+                $("#tablelist").html(tableTpl(res));
+
+                $("#name").val(res.data.name);
+                $("#phone").val(res.data.phone);
+                $("#address").val(res.data.address);
+
+                if(res.data.sex=='m'){
+                    $("input[value='m']").attr("checked",true);
+                }else{
+                     $("input[value='f']").attr("checked",true);
+                }
+
+            },function (err){
+                 swal(err.message,"","error");
+            });
+
+        };
+
+        //管理员提交修改
+        function modifyAdminInfo(){
+            var data={
+                name:$("#name").val(),
+                phone:$("#phone").val(),
+                address:$("#address").val()
+            };
+            data.sex=$("input[name='sex']:checked").val();
+            sew.post("/Admin/modifyAdminInfo",data,function (res){
+                 swal({
+                    title: "修改成功!",
+                    text: "",
+                    type: "success",
+                    closeOnConfirm: false
+                },function (){
+                    window.location.reload();
+                });
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+    </script>
+</body>
+</html>

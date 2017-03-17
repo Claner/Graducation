@@ -12,10 +12,10 @@
 
     <!--指明Controller所在的包，并扫描其中的注解-->
     <contxt:component-scan base-package="Controller"/>
-    <!--静态资源（js，image）的访问-->
-    <mvc:default-servlet-handler/>
     <!--开启注解-->
     <mvc:annotation-driven/>
+    <!--配置允许访问静态资源-->
+    <mvc:default-servlet-handler/>
 
     <!--配置MultiPartResolver-->
     <!--这里的id必须为multipartResolver，不然会运行出错-->

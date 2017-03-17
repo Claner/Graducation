@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 录入课程信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/userManagement.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/saveStudent.css">
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+        <div>
+            <span>录入课程信息</span>
+        </div>
+
+       <div class="one-level addBox">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="course_name" class="col-sm-3 control-label">请输入课程名称：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="course_name" id="course_name" placeholder="请输入课程名称">
+                    </div>
+                </div>
+               
+                <div class="form-group">
+                    <label for="course_credit" class="col-sm-3 control-label">请输入课程学分：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="course_credit" id="course_credit" placeholder="请输入课程学分">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="course_hour" class="col-sm-3 control-label">请输入课程学时：</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="course_hour" id="course_hour" placeholder="请输入课程学时">
+                    </div>
+                </div>
+            </form>
+            <button id="firstAdd"><i class="icon-plus"></i>录入提交</button>
+        </div>
+    </div>
+
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+
+  
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+            
+            $("#firstAdd").on("click",function () {
+                
+                var data={
+                	course_name:$("#course_name").val(),
+                	course_credit:$("#course_credit").val(),
+                	course_hour:$("#course_hour").val()
+                };
+                 if ($("#course_name").val() === '' || $("#course_credit").val() === ''|| $("#course_hour").val()==='') {
+                    swal({
+                        title: "信息不全!",
+                        text: "",
+                        type: "warning",
+                        allowOutsideClick:false,
+                        closeOnConfirm: false
+                    });
+                    return false;
+                    
+                }
+                sew.post('/Admin/saveCourse',data,function (res){
+                     swal({
+                        title: "提交成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                },function (err){
+                    swal(err.message,"","error");
+                });
+
+            });
+
+        };
+
+    </script>
+</body>
+</html>

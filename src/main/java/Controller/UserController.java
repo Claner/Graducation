@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
  */
 @RestController
 @RequestMapping("User")
+@CrossOrigin
 public class UserController {
 
     @Autowired
