@@ -6,11 +6,13 @@
     <session-factory>
         <!--指定1连接数据库所用的驱动-->
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <!--远程数据库-->
+
+        <!--远程-->
         <!--<property name="hibernate.connection.url">jdbc:mysql://139.199.165.150:3306/school</property>-->
         <!--<property name="connection.username">root</property>-->
         <!--<property name="connection.password">hzwHZW123</property>-->
-        <!--远程数据库-->
+        <!--远程-->
+
         <!--本地-->
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/school</property>
         <property name="connection.username">root</property>
@@ -40,5 +42,8 @@
         <mapping class="Entity.ProfessionalCourseEntity"/>
         <mapping class="Entity.StuProfessionalCourseEntity"/>
         <mapping class="Entity.GradeEntity"/>
+        <mapping class="Entity.AnnouncementEntity"/>
+        <mapping class="Entity.BriefEntity"/>
+        <mapping class="Entity.NoticeEntity"/>
     </session-factory>
 </hibernate-configuration>

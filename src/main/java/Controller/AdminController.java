@@ -3,10 +3,14 @@ package Controller;
 import Dao.*;
 import Entity.*;
 import Util.Constant;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +21,9 @@ import java.util.List;
 @RequestMapping("Admin")
 @CrossOrigin
 public class AdminController {
+
+    private String baseUrl = "http://www.wyu.edu.cn/news/";
+    private Elements elements;
 
     @Autowired
     private UserDao userDao;
@@ -41,6 +48,15 @@ public class AdminController {
 
     @Autowired
     private GradeDao gradeDao;
+
+    @Autowired
+    private NoticeDao noticeDao;
+
+    @Autowired
+    private BriefDao briefDao;
+
+    @Autowired
+    private AnnouncementDao announcementDao;
 
     @Autowired
     private Response.Builder builder;
@@ -543,5 +559,331 @@ public class AdminController {
             professionalCourseList.add(professionalCourse);
         }
         return professionalCourseList;
+    }
+
+    /**
+     * 展示校园信息
+     */
+    @RequestMapping(value = "/getItemListByType", method = RequestMethod.POST)
+    public Response getItemListByType(@RequestParam("type") int type) {
+        try {
+            Document document = Jsoup.connect("http://www.wyu.edu.cn/news/index.asp?pg=1&m=0&tid=0&pid=0&cid=0")
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .header("Accept-Language", "zh-CN,zh;q=0.8")
+                    .header("Cache-Control", "max-age=0")
+                    .header("Connection", "keep-alive")
+                    .timeout(5000)
+                    .header("Cookie", "fontsize=1; ASPSESSIONIDAQABRQBC=OHCJIIIAJOELOHEKKGIGKEAC; n%5Fident%5FSF%5Fs=0; n%5Fident%5Fname%5Fs=3113001234; fontsize=1; ASPSESSIONIDCQBBRRBD=CEBENEFBDJLINEDHJGPMKJNJ; safedog-flow-item=5E87C1CC4BDA854B6E284336BDF67812")
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36")
+                    .get();
+
+            elements = document.getElementsByClass("wyu-lineheight-s");
+            switch (type) {
+                case 0:
+                    return builder.setCode(20000).setData("校内通知")
+                            .setDataList(getItemList(0)).build();
+                case 1:
+                    return builder.setCode(20000).setData("校内简讯")
+                            .setDataList(getItemList(1)).build();
+                case 2:
+                    return builder.setCode(20000).setData("公示公告")
+                            .setDataList(getItemList(2)).build();
+                default:
+                    return builder.setCode(40000).setMessage("未知错误").build();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return builder.setCode(40000).setMessage("获取学校数据失败").build();
+        }
+    }
+
+    private List<Info> getItemList(int which) {
+        Elements titleElements = elements.get(which).select("a");
+        Elements fromElements = elements.get(which).select("span");
+        if (titleElements.size() != fromElements.size()) return null;
+        List<Info> infoList = new ArrayList<Info>();
+        for (int j = 0; j < titleElements.size(); j++) {
+            String from = fromElements.get(j).text().replaceAll(Jsoup.parse("&nbsp;").text(),
+                    "-");
+            String[] strings = from.split("-");
+            String publish = strings[0];
+            String time = strings[1];
+            String title = titleElements.get(j).text();
+            String link = baseUrl + titleElements.get(j).attr("href");
+            if (!isAdd(which, title)) {
+                infoList.add(new Info.Builder().setTime(time)
+                        .setPublish(publish)
+                        .setTitle(title)
+                        .setLink(link).build());
+            }
+        }
+        return infoList;
+    }
+
+    public boolean isAdd(int which, String title) {
+        switch (which) {
+            case 0:
+                return noticeDao.isAddNoticeByTitle(title);
+            case 1:
+                return briefDao.isAddBriefByTitle(title);
+            case 2:
+                return announcementDao.isAddAnnouncementByTitle(title);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * 获取详细内容
+     */
+    @RequestMapping(value = "/getDetails", method = RequestMethod.POST)
+    public Response getDetails(@RequestParam("link") String url) {
+        String content = getArticleDetails(url);
+        return builder.setCode(20000).setMessage(content).build();
+    }
+
+    /**
+     * 获取详细内容
+     */
+    private String getArticleDetails(String url) {
+        try {
+            Document document = Jsoup.connect(url)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                    .header("Accept-Encoding", "gzip, deflate, sdch")
+                    .header("Accept-Language", "zh-CN,zh;q=0.8")
+                    .header("Cache-Control", "max-age=0")
+                    .header("Connection", "keep-alive")
+                    .timeout(5000)
+                    .header("Cookie", "fontsize=1; n%5Fident%5Fname%5Fs=3113001234; n%5Fident%5FSF%5Fs=0; ASPSESSIONIDCQCBRRBD=GFBMEBCCKAFJGJKFGEAKJOAA; fontsize=1; ASPSESSIONIDAQDAQSCA=HBGFFNOCOCDCJBEJCKBLJCEA; safedog-flow-item=95F42CB2962216948460C002A6D4FF68")
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36")
+                    .get();
+
+            Elements elements = document.getElementsByClass("news_view_content");
+            String content = elements.get(0).text().replaceAll(Jsoup.parse("&nbsp;").text(),
+                    " ");
+
+            return content;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "获取文章内容失败";
+        }
+    }
+
+    /**
+     * 保存校内通知到数据库
+     */
+    @RequestMapping(value = "/saveNotice", method = RequestMethod.POST)
+    public Response saveNotice(@RequestParam("title") String title,
+                               @RequestParam("publish") String publish,
+                               @RequestParam("time") String time,
+                               @RequestParam("link") String link) {
+        String content = getArticleDetails(link);
+        switch (noticeDao.saveNotice(title, publish, time, content)) {
+            case Constant.SAVE_SUCCESS:
+                return builder.setCode(20000).setMessage("保存成功").build();
+            case Constant.SAVE_FAILURE:
+                return builder.setCode(40000).setMessage("该数据已存在").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 删除数据库中的校内通知
+     */
+    @RequestMapping(value = "/deleteNotice", method = RequestMethod.POST)
+    public Response deleteNotice(@RequestParam("id") int id) {
+        switch (noticeDao.deleteNotice(id)) {
+            case Constant.DELETE_SUCCESS:
+                return builder.setCode(20000).setMessage("删除成功").build();
+            case Constant.DELETE_FAILURE:
+                return builder.setCode(40000).setMessage("该数据不存在").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 修改校内通知
+     */
+    @RequestMapping(value = "/modifyNotice", method = RequestMethod.POST)
+    public Response modifyNotice(@RequestParam("id") int id,
+                                 @RequestParam("title") String title,
+                                 @RequestParam("publish") String publish,
+                                 @RequestParam("time") String time) {
+        switch (noticeDao.updateNotice(id, title, publish, time)) {
+            case Constant.UPDATE_SUCCESS:
+                return builder.setCode(20000).setMessage("修改校内信息成功").build();
+            case Constant.UPDATE_FAILURE:
+                return builder.setCode(40000).setMessage("修改校内信息失败").build();
+            case Constant.NOT_EXIST:
+                return builder.setCode(40000).setMessage("该校内通知不存在").build();
+            case Constant.HAS_EXIST:
+                return builder.setCode(40000).setMessage("该标题已被使用").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 修改校内通知内容
+     */
+    @RequestMapping(value = "/modifyNoticeDetails", method = RequestMethod.POST)
+    public Response modifyNoticeDetails(@RequestParam("id") int id,
+                                        @RequestParam("content") String content) {
+        switch (noticeDao.updateNoticeDetails(id, content)) {
+            case Constant.UPDATE_SUCCESS:
+                return builder.setCode(20000).setMessage("修改校内通知内容成功").build();
+            case Constant.UPDATE_FAILURE:
+                return builder.setCode(40000).setMessage("修改校内通知内容失败").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 保存校内简讯到数据库
+     */
+    @RequestMapping(value = "/saveBrief", method = RequestMethod.POST)
+    public Response saveBrief(@RequestParam("title") String title,
+                              @RequestParam("publish") String publish,
+                              @RequestParam("time") String time,
+                              @RequestParam("link") String link) {
+        String content = getArticleDetails(link);
+        switch (briefDao.saveBrief(title, publish, time, content)) {
+            case Constant.SAVE_SUCCESS:
+                return builder.setCode(20000).setMessage("保存校内简讯成功").build();
+            case Constant.SAVE_FAILURE:
+                return builder.setCode(40000).setMessage("已保存该简讯").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 删除校内简讯
+     */
+    @RequestMapping(value = "/deleteBrief", method = RequestMethod.POST)
+    public Response deleteBrief(@RequestParam("id") int id) {
+        switch (briefDao.deleteBrief(id)) {
+            case Constant.DELETE_SUCCESS:
+                return builder.setCode(20000).setMessage("删除成功").build();
+            case Constant.DELETE_FAILURE:
+                return builder.setCode(40000).setMessage("该数据不存在").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 修改校内简讯
+     */
+    @RequestMapping(value = "/modifyBrief", method = RequestMethod.POST)
+    public Response modifyBrief(@RequestParam("id") int id,
+                                @RequestParam("title") String title,
+                                @RequestParam("publish") String publish,
+                                @RequestParam("time") String time) {
+        switch (briefDao.updateBrief(id, title, publish, time)) {
+            case Constant.UPDATE_SUCCESS:
+                return builder.setCode(20000).setMessage("修改校内简讯成功").build();
+            case Constant.UPDATE_FAILURE:
+                return builder.setCode(40000).setMessage("修改校内简讯失败").build();
+            case Constant.NOT_EXIST:
+                return builder.setCode(40000).setMessage("该校内简讯不存在").build();
+            case Constant.HAS_EXIST:
+                return builder.setCode(40000).setMessage("该标题已被使用").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 修改校内简讯内容
+     */
+    @RequestMapping(value = "/modifyBriefDetails", method = RequestMethod.POST)
+    public Response modifyBriefDetails(@RequestParam("id") int id,
+                                       @RequestParam("content") String content) {
+        switch (briefDao.updateBriefDetails(id, content)) {
+            case Constant.UPDATE_SUCCESS:
+                return builder.setCode(20000).setMessage("修改校内简讯内容成功").build();
+            case Constant.UPDATE_FAILURE:
+                return builder.setCode(40000).setMessage("修改校内简讯内容失败").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 保存公示公告到数据库
+     */
+    @RequestMapping(value = "/saveAnnouncement", method = RequestMethod.POST)
+    public Response saveAnnouncement(@RequestParam("title") String title,
+                                     @RequestParam("publish") String publish,
+                                     @RequestParam("time") String time,
+                                     @RequestParam("link") String link) {
+        String content = getArticleDetails(link);
+        switch (announcementDao.saveAnnouncement(title, publish, time, content)) {
+            case Constant.SAVE_SUCCESS:
+                return builder.setCode(20000).setMessage("保存公示公告成功").build();
+            case Constant.SAVE_FAILURE:
+                return builder.setCode(40000).setMessage("该公示公告已存在").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 删除公示公告
+     */
+    @RequestMapping(value = "/deleteAnnouncement", method = RequestMethod.POST)
+    public Response deleteAnnouncement(@RequestParam("id") int id) {
+        switch (announcementDao.deleteAnnouncement(id)) {
+            case Constant.DELETE_SUCCESS:
+                return builder.setCode(20000).setMessage("删除成功").build();
+            case Constant.DELETE_FAILURE:
+                return builder.setCode(40000).setMessage("该数据不存在").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 修改公示公告
+     */
+    @RequestMapping(value = "/modifyAnnouncement", method = RequestMethod.POST)
+    public Response modifyAnnouncement(@RequestParam("id") int id,
+                                       @RequestParam("title") String title,
+                                       @RequestParam("publish") String publish,
+                                       @RequestParam("time") String time) {
+        switch (announcementDao.updateAnnouncement(id, title, publish, time)) {
+            case Constant.UPDATE_SUCCESS:
+                return builder.setCode(20000).setMessage("修改公示公告成功").build();
+            case Constant.UPDATE_FAILURE:
+                return builder.setCode(40000).setMessage("修改公示公告失败").build();
+            case Constant.NOT_EXIST:
+                return builder.setCode(40000).setMessage("该公告不存在").build();
+            case Constant.HAS_EXIST:
+                return builder.setCode(40000).setMessage("改标题已使用").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
+    }
+
+    /**
+     * 修改公示公告内容
+     */
+    @RequestMapping(value = "/modifyAnnouncementDetails", method = RequestMethod.POST)
+    public Response modifyAnnouncementDetails(@RequestParam("id") int id,
+                                              @RequestParam("content") String content) {
+        switch (announcementDao.updateAnnouncementDetails(id, content)) {
+            case Constant.UPDATE_SUCCESS:
+                return builder.setCode(20000).setMessage("修改公示公告内容成功").build();
+            case Constant.UPDATE_FAILURE:
+                return builder.setCode(40000).setMessage("修改公示公告内容失败").build();
+            default:
+                return builder.setCode(40000).setMessage("未知错误").build();
+        }
     }
 }

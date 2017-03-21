@@ -34,6 +34,9 @@
             <mvc:exclude-mapping path="/User/getVerificationCode"/>
             <mvc:exclude-mapping path="/User/test"/>
             <mvc:exclude-mapping path="/Test/*"/>
+            <mvc:exclude-mapping path="/Notice/*"/>
+            <mvc:exclude-mapping path="/Brief/*"/>
+            <mvc:exclude-mapping path="/Announcement/*"/>
             <bean class="Interceptor.LoginInterceptor"/>
         </mvc:interceptor>
 
