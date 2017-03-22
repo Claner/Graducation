@@ -132,4 +132,16 @@ public class BriefDao {
         HibernateUtil.close();
         return i > 0 ? Constant.UPDATE_SUCCESS : Constant.UPDATE_FAILURE;
     }
+
+    /**
+     * 获取数量
+     */
+    public long getCount(){
+        Session session = HibernateUtil.getSession();
+        String hql = "select count(*) from BriefEntity";
+        Query query = session.createQuery(hql);
+        long i = ((Long) query.uniqueResult()).intValue();
+        HibernateUtil.close();
+        return i;
+    }
 }

@@ -24,7 +24,10 @@ import javax.servlet.http.HttpSession;
 public class UserController {
 
     @Autowired
-    private Response.Builder builder;
+    private Response response;
+
+//    @Autowired
+//    private Response.Builder builder;
 
     @Autowired
     private UserDao userDao;
@@ -52,12 +55,15 @@ public class UserController {
                 session.setAttribute("isLogin", userEntity.getId());
                 if ("2".equals(userEntity.getRole())) session.setAttribute("isAdmin", userEntity.getRole());
                 if ("3".equals(userEntity.getRole())) session.setAttribute("isSuperAdmin", userEntity.getRole());
-                return builder.setCode(20000).setMessage("登陆成功").setData(userEntity).build();
+                return response.successWithData("登陆成功", userEntity);
+//                return builder.setCode(20000).setMessage("登陆成功").setData(userEntity).build();
             } else {
-                return builder.setCode(40000).setMessage("用户名或密码错误").build();
+                return response.error("用户名或密码错误");
+//                return builder.setCode(40000).setMessage("用户名或密码错误").build();
             }
         } else {
-            return builder.setCode(40000).setMessage("验证码错误或已失效").build();
+            return response.error("验证码错误或已失效");
+//            return builder.setCode(40000).setMessage("验证码错误或已失效").build();
         }
     }
 
@@ -97,13 +103,17 @@ public class UserController {
                                    HttpSession session) {
         switch (userDao.modifyPassword((Integer) session.getAttribute("isLogin"), pre_password, new_password)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改密码成功，下次请用新密码登陆").build();
+                return response.success("修改密码成功，下次请用新密码登陆");
+//                return builder.setCode(20000).setMessage("修改密码成功，下次请用新密码登陆").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改密码失败").build();
+                return response.error("修改密码失败");
+//                return builder.setCode(40000).setMessage("修改密码失败").build();
             case Constant.PASSWORD_WRONG:
-                return builder.setCode(40000).setMessage("原密码错误").build();
+                return response.error("原密码错误");
+//                return builder.setCode(40000).setMessage("原密码错误").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -114,6 +124,7 @@ public class UserController {
     public Response logout(HttpSession session) {
         session.removeAttribute("isLogin");
         session.removeAttribute("isAdmin");
-        return builder.setCode(20000).setMessage("已退出").build();
+        return response.success("已退出");
+//        return builder.setCode(20000).setMessage("已退出").build();
     }
 }

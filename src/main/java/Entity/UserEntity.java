@@ -24,6 +24,11 @@ public class UserEntity {
         this.id = id;
     }
 
+    public UserEntity(String account, String password) {
+        this.account = account;
+        this.password = password;
+    }
+
     public UserEntity(int id, String account, String role) {
         this.id = id;
         this.account = account;

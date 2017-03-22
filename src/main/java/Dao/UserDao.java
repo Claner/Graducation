@@ -11,6 +11,8 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.registry.infomodel.User;
+
 /**
  * Created by Clanner on 2017/3/6.
  */
@@ -18,11 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDao {
 
     /**
-     *录入管理员
+     * 录入管理员
      */
-    public int saveAdmin(String account,String password){
+    public int saveAdmin(String account, String password) {
         Session session = HibernateUtil.getSession();
-        UserEntity userEntity = new UserEntity(account,GeneralUtils.EnCode(password),"2");
+        UserEntity userEntity = new UserEntity(account, GeneralUtils.EnCode(password), "2");
         session.save(userEntity);
         HibernateUtil.commit();
         int id = userEntity.getId();
@@ -126,5 +128,18 @@ public class UserDao {
             default:
                 return false;
         }
+    }
+
+    /**
+     * 获取用户账号和密码
+     */
+    public UserEntity getUserAccountAndPassword(int id) {
+        Session session = HibernateUtil.getSession();
+        String hql = "select new UserEntity(userEntity.account,userEntity.password) from UserEntity as userEntity where userEntity.id=:id";
+        Query query = session.createQuery(hql);
+        query.setInteger("id", id);
+        UserEntity userEntity = (UserEntity) query.uniqueResult();
+        HibernateUtil.close();
+        return userEntity;
     }
 }

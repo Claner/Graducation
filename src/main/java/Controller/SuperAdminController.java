@@ -19,8 +19,11 @@ import java.util.List;
 @CrossOrigin
 public class SuperAdminController {
 
+//    @Autowired
+//    private Response.Builder builder;
+
     @Autowired
-    private Response.Builder builder;
+    private Response response;
 
     @Autowired
     private UserDao userDao;
@@ -41,16 +44,21 @@ public class SuperAdminController {
                              @RequestParam("sex") String sex,
                              @RequestParam("phone") String phone,
                              @RequestParam("address") String address) {
-        if (userDao.isUserExist(account)) return builder.setCode(40000).setMessage("管理员已存在").build();
+        if (userDao.isUserExist(account))
+            return response.error("管理员已存在");
+//            return builder.setCode(40000).setMessage("管理员已存在").build();
         int id = userDao.saveAdmin(account, password);
         if (id != 0) {
             if (adminDao.saveAdmin(id, name, sex, phone, address)) {
-                return builder.setCode(20000).setMessage("添加管理员成功").build();
+                return response.success("添加管理员成功");
+//                return builder.setCode(20000).setMessage("添加管理员成功").build();
             } else {
-                return builder.setCode(40000).setMessage("添加管理员成功但初始化信息失败").build();
+                return response.error("添加管理员成功但初始化信息失败");
+//                return builder.setCode(40000).setMessage("添加管理员成功但初始化信息失败").build();
             }
         } else {
-            return builder.setCode(40000).setMessage("添加管理员失败").build();
+            return response.error("添加管理员失败");
+//            return builder.setCode(40000).setMessage("添加管理员失败").build();
         }
     }
 
@@ -60,9 +68,11 @@ public class SuperAdminController {
     @RequestMapping(value = "/deleteAdmin", method = RequestMethod.POST)
     public Response deleteAdmin(@RequestParam("id") int id) {
         if (superAdminDao.deleteAdmin(id)) {
-            return builder.setCode(20000).setMessage("删除管理员成功").build();
+            return response.success("删除管理员成功");
+//            return builder.setCode(20000).setMessage("删除管理员成功").build();
         } else {
-            return builder.setCode(40000).setMessage("删除管理员失败").build();
+            return response.error("删除管理员失败");
+//            return builder.setCode(40000).setMessage("删除管理员失败").build();
         }
     }
 
@@ -75,9 +85,11 @@ public class SuperAdminController {
         long size = adminDao.getCount();
         List<AdminEntity> list = adminDao.getAllAdmin(pageNo, pageSize);
         if (list != null && list.size() > 0) {
-            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(list).build();
+            return response.successWithAll("获取数据成功", size, list);
+//            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(list).build();
         } else {
-            return builder.setCode(40000).setMessage("没有数据").build();
+            return response.error("没有数据");
+//            return builder.setCode(40000).setMessage("没有数据").build();
         }
     }
 }

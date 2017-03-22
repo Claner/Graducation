@@ -58,8 +58,11 @@ public class AdminController {
     @Autowired
     private AnnouncementDao announcementDao;
 
+//    @Autowired
+//    private Response.Builder builder;
+
     @Autowired
-    private Response.Builder builder;
+    private Response response;
 
     /**
      * 录入学生信息
@@ -74,19 +77,26 @@ public class AdminController {
                                 @RequestParam(value = "phone", required = false) String phone,
                                 @RequestParam(value = "address", required = false) String address) {
         if (!academyDao.isAcademyExist(academy_id))
-            return builder.setCode(40000).setMessage("学院不存在").build();
+            return response.error("学院不存在");
+//            return builder.setCode(40000).setMessage("学院不存在").build();
         if (!professionalDao.isProfessionalExist(professional_id))
-            return builder.setCode(40000).setMessage("专业不存在").build();
-        if (userDao.isUserExist(account)) return builder.setCode(40000).setMessage("该用户已存在").build();
+            return response.error("专业不存在");
+//            return builder.setCode(40000).setMessage("专业不存在").build();
+        if (userDao.isUserExist(account))
+            return response.error("该用户已存在");
+//            return builder.setCode(40000).setMessage("该用户已存在").build();
         int user_id = userDao.saveUser(account);
         if (user_id != 0) {
             if (studentDao.saveStudent(user_id, academy_id, professional_id, grade, name, sex, phone, address)) {
-                return builder.setCode(20000).setMessage("录入学生信息成功").build();
+                return response.success("录入学生信息成功");
+//                return builder.setCode(20000).setMessage("录入学生信息成功").build();
             } else {
-                return builder.setCode(40000).setMessage("录入学生成功,但保存学生信息失败").build();
+                return response.error("录入学生成功,但保存学生信息失败");
+//                return builder.setCode(40000).setMessage("录入学生成功,但保存学生信息失败").build();
             }
         } else {
-            return builder.setCode(40000).setMessage("录入学生信息失败").build();
+            return response.error("录入学生信息失败");
+//            return builder.setCode(40000).setMessage("录入学生信息失败").build();
         }
     }
 
@@ -95,11 +105,15 @@ public class AdminController {
      */
     @RequestMapping(value = "/deleteStudent", method = RequestMethod.POST)
     public Response deleteStudent(@RequestParam("stu_id") int stu_id) {
-        if (!studentDao.isStudentExist(stu_id)) return builder.setCode(40000).setMessage("该学生已被删除").build();
+        if (!studentDao.isStudentExist(stu_id))
+            return response.error("该学生已被删除");
+//            return builder.setCode(40000).setMessage("该学生已被删除").build();
         if (adminDao.deleteStudent(stu_id)) {
-            return builder.setCode(20000).setMessage("删除学生成功").build();
+            return response.success("删除学生成功");
+//            return builder.setCode(20000).setMessage("删除学生成功").build();
         } else {
-            return builder.setCode(40000).setMessage("删除学生成功").build();
+            return response.error("删除学生失败");
+//            return builder.setCode(40000).setMessage("删除学生失败").build();
         }
     }
 
@@ -112,16 +126,21 @@ public class AdminController {
                                   @RequestParam("professional_id") int professional_id,
                                   @RequestParam("grade") int grade) {
         if (!academyDao.isAcademyExist(academy_id))
-            return builder.setCode(40000).setMessage("学院不存在").build();
+            response.error("学院不存在");
+//            return builder.setCode(40000).setMessage("学院不存在").build();
         if (!professionalDao.isProfessionalExist(professional_id))
-            return builder.setCode(40000).setMessage("专业不存在").build();
+            return response.error("专业不存在");
+//            return builder.setCode(40000).setMessage("专业不存在").build();
         switch (studentDao.updateStudentAcademyOrProfessionalOrGrade(stu_id, academy_id, professional_id, grade)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改学生信息成功").build();
+                return response.success("修改学生信息成功");
+//                return builder.setCode(20000).setMessage("修改学生信息成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改学生信息失败").build();
+                return response.error("修改学生信息失败");
+//                return builder.setCode(40000).setMessage("修改学生信息失败").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -132,11 +151,14 @@ public class AdminController {
     public Response saveAcademy(@RequestParam("academy_name") String academyName) {
         switch (academyDao.saveAcademy(academyName)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("录入学院成功").build();
+                return response.success("录入学院成功");
+//                return builder.setCode(20000).setMessage("录入学院成功").build();
             case Constant.SAVE_FAILURE:
-                return builder.setCode(40000).setMessage("录入学院失败").build();
+                return response.error("录入学院失败");
+//                return builder.setCode(40000).setMessage("录入学院失败").build();
             default:
-                return builder.setCode(40000).setMessage("已录入该学院").build();
+                return response.error("已录入该学院");
+//                return builder.setCode(40000).setMessage("已录入该学院").build();
         }
     }
 
@@ -148,20 +170,26 @@ public class AdminController {
         if (!professionalDao.isHasProfessional(id)) {
             switch (academyDao.deleteAcademyWhitoutProfessional(id)) {
                 case Constant.DELETE_SUCCESS:
-                    return builder.setCode(20000).setMessage("删除学院信息成功").build();
+                    return response.success("删除学院信息成功");
+//                    return builder.setCode(20000).setMessage("删除学院信息成功").build();
                 case Constant.DELETE_FAILURE:
-                    return builder.setCode(40000).setMessage("该学院信息已删除").build();
+                    return response.error("该学院信息已删除");
+//                    return builder.setCode(40000).setMessage("该学院信息已删除").build();
                 default:
-                    return builder.setCode(40000).setMessage("未知错误").build();
+                    return response.error("未知错误");
+//                    return builder.setCode(40000).setMessage("未知错误").build();
             }
         } else {
             switch (academyDao.deleteAcademy(id)) {
                 case Constant.DELETE_SUCCESS:
-                    return builder.setCode(20000).setMessage("删除学院信息成功").build();
+                    return response.success("删除学院信息成功");
+//                    return builder.setCode(20000).setMessage("删除学院信息成功").build();
                 case Constant.DELETE_FAILURE:
-                    return builder.setCode(40000).setMessage("该学院信息已删除").build();
+                    return response.error("该学院信息已删除");
+//                    return builder.setCode(40000).setMessage("该学院信息已删除").build();
                 default:
-                    return builder.setCode(40000).setMessage("未知错误").build();
+                    return response.error("未知错误");
+//                    return builder.setCode(40000).setMessage("未知错误").build();
             }
         }
     }
@@ -174,13 +202,17 @@ public class AdminController {
                                       @RequestParam("academy_name") String academy_name) {
         switch (academyDao.updateAcademyInfo(academy_id, academy_name)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改学院信息成功").build();
+                return response.success("修改学院信息成功");
+//                return builder.setCode(20000).setMessage("修改学院信息成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改学院信息失败").build();
+                return response.error("修改学院信息失败");
+//                return builder.setCode(40000).setMessage("修改学院信息失败").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("学院已存在").build();
+                return response.error("学院已存在");
+//                return builder.setCode(40000).setMessage("学院已存在").build();
             default:
-                return builder.setCode(40000).setMessage("学院不存在").build();
+                return response.error("学院不存在");
+//                return builder.setCode(40000).setMessage("学院不存在").build();
         }
     }
 
@@ -191,14 +223,19 @@ public class AdminController {
     public Response saveProfessional(@RequestParam("academy_id") int academy_id,
                                      @RequestParam("professional_name") String professional_name,
                                      @RequestParam("year") String year) {
-        if (!academyDao.isAcademyExist(academy_id)) return builder.setCode(40000).setMessage("该学院不存在").build();
+        if (!academyDao.isAcademyExist(academy_id))
+            return response.error("该学院不存在");
+//            return builder.setCode(40000).setMessage("该学院不存在").build();
         switch (professionalDao.saveProfessional(academy_id, professional_name, year)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("录入专业成功").build();
+                return response.success("录入专业成功");
+//                return builder.setCode(20000).setMessage("录入专业成功").build();
             case Constant.SAVE_FAILURE:
-                return builder.setCode(20000).setMessage("录入专业失败").build();
+                return response.error("录入专业失败");
+//                return builder.setCode(40000).setMessage("录入专业失败").build();
             default:
-                return builder.setCode(40000).setMessage("该专业已存在").build();
+                return response.error("该专业已存在");
+//                return builder.setCode(40000).setMessage("该专业已存在").build();
         }
     }
 
@@ -209,11 +246,14 @@ public class AdminController {
     public Response deleteProfessional(@RequestParam("id") int id) {
         switch (professionalDao.deleteProfessional(id)) {
             case Constant.DELETE_SUCCESS:
-                return builder.setCode(20000).setMessage("删除专业成功").build();
+                return response.success("删除专业成功");
+//                return builder.setCode(20000).setMessage("删除专业成功").build();
             case Constant.DELETE_FAILURE:
-                return builder.setCode(40000).setMessage("该专业已删除").build();
+                return response.error("该专业已删除");
+//                return builder.setCode(40000).setMessage("该专业已删除").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -227,13 +267,17 @@ public class AdminController {
                                            @RequestParam("year") String year) {
         switch (professionalDao.updateProfessionalInfo(id, academy_id, pro_name, year)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改专业信息成功").build();
+                return response.success("修改专业信息成功");
+//                return builder.setCode(20000).setMessage("修改专业信息成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改专业信息失败").build();
+                return response.error("修改专业信息失败");
+//                return builder.setCode(40000).setMessage("修改专业信息失败").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("专业已存在").build();
+                return response.error("专业已存在");
+//                return builder.setCode(40000).setMessage("专业已存在").build();
             default:
-                return builder.setCode(40000).setMessage("专业信息不存在").build();
+                return response.error("专业信息不存在");
+//                return builder.setCode(40000).setMessage("专业信息不存在").build();
         }
     }
 
@@ -246,11 +290,14 @@ public class AdminController {
                                @RequestParam("course_hour") int hour) {
         switch (courseDao.saveCourse(course_name, course_credit, hour)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("录入课程成功").build();
+                return response.success("录入课程成功");
+//                return builder.setCode(20000).setMessage("录入课程成功").build();
             case Constant.SAVE_FAILURE:
-                return builder.setCode(40000).setMessage("录入课程失败").build();
+                return response.error("录入课程失败");
+//                return builder.setCode(40000).setMessage("录入课程失败").build();
             default:
-                return builder.setCode(40000).setMessage("该课程已存在").build();
+                return response.error("该课程已存在");
+//                return builder.setCode(40000).setMessage("该课程已存在").build();
         }
     }
 
@@ -261,11 +308,14 @@ public class AdminController {
     public Response deleteCourse(@RequestParam("id") int id) {
         switch (courseDao.deleteCourse(id)) {
             case Constant.DELETE_SUCCESS:
-                return builder.setCode(20000).setMessage("删除课程信息成功").build();
+                return response.success("删除课程信息成功");
+//                return builder.setCode(20000).setMessage("删除课程信息成功").build();
             case Constant.DELETE_FAILURE:
-                return builder.setCode(40000).setMessage("删除课程信息失败").build();
+                return response.error("删除课程信息失败");
+//                return builder.setCode(40000).setMessage("删除课程信息失败").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -279,13 +329,17 @@ public class AdminController {
                                      @RequestParam("course_hour") int course_hour) {
         switch (courseDao.updateCourseInfo(id, course_name, course_credit, course_hour)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改课程信息成功").build();
+                return response.success("修改课程信息成功");
+//                return builder.setCode(20000).setMessage("修改课程信息成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改课程信息失败").build();
+                return response.error("修改课程信息失败");
+//                return builder.setCode(40000).setMessage("修改课程信息失败").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("课程已存在").build();
+                return response.error("课程已存在");
+//                return builder.setCode(40000).setMessage("课程已存在").build();
             default:
-                return builder.setCode(40000).setMessage("课程不存在").build();
+                return response.error("课程不存在");
+//                return builder.setCode(40000).setMessage("课程不存在").build();
         }
     }
 
@@ -296,9 +350,11 @@ public class AdminController {
     public Response getStudentInfo(@RequestParam("stu_id") int stu_id) {
         StudentEntity studentEntity = studentDao.selectStudent(stu_id);
         if (studentEntity != null) {
-            return builder.setCode(20000).setMessage("查询成功").setData(studentEntity).build();
+            return response.successWithData("查询成功", studentEntity);
+//            return builder.setCode(20000).setMessage("查询成功").setData(studentEntity).build();
         } else {
-            return builder.setCode(40000).setMessage("学生不存在").build();
+            return response.error("学生不存在");
+//            return builder.setCode(40000).setMessage("学生不存在").build();
         }
     }
 
@@ -309,9 +365,11 @@ public class AdminController {
     public Response getAdminInfo(HttpSession session) {
         AdminEntity adminEntity = adminDao.getAdminInfo((Integer) session.getAttribute("isLogin"));
         if (adminEntity != null) {
-            return builder.setCode(20000).setMessage("获取信息成功").setData(adminEntity).build();
+            return response.successWithData("获取信息成功", adminEntity);
+//            return builder.setCode(20000).setMessage("获取信息成功").setData(adminEntity).build();
         } else {
-            return builder.setCode(40000).setMessage("获取管理员信息失败").build();
+            return response.error("获取管理员信息失败");
+//            return builder.setCode(40000).setMessage("获取管理员信息失败").build();
         }
     }
 
@@ -326,11 +384,14 @@ public class AdminController {
                                     @RequestParam("address") String address) {
         switch (adminDao.updateAdminInfo((Integer) session.getAttribute("isLogin"), name, sex, phone, address)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改管理员信息成功").build();
+                return response.success("修改管理员信息成功");
+//                return builder.setCode(20000).setMessage("修改管理员信息成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改管理员信息失败").build();
+                return response.error("修改管理员信息失败");
+//                return builder.setCode(40000).setMessage("修改管理员信息失败").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -357,11 +418,18 @@ public class AdminController {
                 student.setAcademyName(academyDao.getAcademyName(studentEntity.getAcademyId()));
                 student.setProfessionalName(professionalDao.getProfessionalName(studentEntity.getProfessionalId()));
                 student.setGrade(gradeDao.getGrade(studentEntity.getGradeId()));
+                UserEntity userEntity = userDao.getUserAccountAndPassword(studentEntity.getStuId());
+                if (userEntity != null) {
+                    student.setAccount(userEntity.getAccount());
+                    student.setPassword(userEntity.getPassword());
+                }
                 studentList.add(student);
             }
-            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(studentList).build();
+            return response.successWithAll("获取数据成功", size, studentList);
+//            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(studentList).build();
         } else {
-            return builder.setCode(40000).setMessage("暂无数据").build();
+            return response.error("暂无数据");
+//            return builder.setCode(40000).setMessage("暂无数据").build();
         }
     }
 
@@ -374,9 +442,11 @@ public class AdminController {
         long size = academyDao.getCount();
         List<AcademyEntity> list = academyDao.getAllAcademy(pageNo, pageSize);
         if (list != null && list.size() != 0) {
-            return builder.setCode(20000).setMessage("查询成功").setData(size).setDataList(list).build();
+            return response.successWithAll("查询成功", size, list);
+//            return builder.setCode(20000).setMessage("查询成功").setData(size).setDataList(list).build();
         } else {
-            return builder.setCode(40000).setMessage("没有数据了").build();
+            return response.error("没有数据了");
+//            return builder.setCode(40000).setMessage("没有数据了").build();
         }
     }
 
@@ -389,9 +459,11 @@ public class AdminController {
         long size = professionalDao.getCount();
         List<ProfessionalEntity> list = professionalDao.getAllProfessional(pageNo, pageSize);
         if (list != null && list.size() > 0) {
-            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(list).build();
+            return response.successWithAll("获取数据成功", size, list);
+//            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(list).build();
         } else {
-            return builder.setCode(40000).setMessage("没有数据").build();
+            return response.error("没有数据");
+//            return builder.setCode(40000).setMessage("没有数据").build();
         }
     }
 
@@ -402,9 +474,11 @@ public class AdminController {
     public Response getTargetProfessional(@RequestParam("academy_id") int academy_id) {
         List<ProfessionalEntity> list = professionalDao.getTargetProfessional(academy_id);
         if (list != null && list.size() > 0) {
-            return builder.setCode(20000).setMessage("获取专业成功").setDataList(list).build();
+            return response.successWithData("获取专业成功", list);
+//            return builder.setCode(20000).setMessage("获取专业成功").setDataList(list).build();
         } else {
-            return builder.setCode(40000).setMessage("没有数据").build();
+            return response.error("没有数据");
+//            return builder.setCode(40000).setMessage("没有数据").build();
         }
     }
 
@@ -417,9 +491,11 @@ public class AdminController {
         long size = courseDao.getCount();
         List<CourseEntity> list = courseDao.getAllCourse(pageNo, pageSize);
         if (list != null && list.size() > 0) {
-            return builder.setCode(20000).setMessage("获取课程成功").setData(size).setDataList(list).build();
+            return response.successWithAll("获取课程成功", size, list);
+//            return builder.setCode(20000).setMessage("获取课程成功").setData(size).setDataList(list).build();
         } else {
-            return builder.setCode(40000).setMessage("没有数据").build();
+            return response.error("没有数据");
+//            return builder.setCode(40000).setMessage("没有数据").build();
         }
     }
 
@@ -432,20 +508,27 @@ public class AdminController {
                                            @RequestParam("course_id") int course_id,
                                            @RequestParam("time") String time) {
         if (grade_id > 8 || grade_id < 1)
-            return builder.setCode(40000).setMessage("年级超出范围").build();
+            return response.error("年级超出范围");
+//            return builder.setCode(40000).setMessage("年级超出范围").build();
         if (!courseDao.isCourseExist(course_id))
-            return builder.setCode(40000).setMessage("该课程不存在").build();
+            return response.error("该课程不存在");
+//            return builder.setCode(40000).setMessage("该课程不存在").build();
         switch (professionalCourseDao.saveProfessionalCourse(grade_id, professional_id, course_id, time)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("排课成功").build();
+                return response.success("排课成功");
+//                return builder.setCode(20000).setMessage("排课成功").build();
             case Constant.PARAMS_NOT_MATCH:
-                return builder.setCode(40000).setMessage("参数不合法").build();
+                return response.error("参数不合法");
+//                return builder.setCode(40000).setMessage("参数不合法").build();
             case Constant.COURSE_CONFLICT:
-                return builder.setCode(40000).setMessage("课程时间冲突").build();
+                return response.error("课程时间冲突");
+//                return builder.setCode(40000).setMessage("课程时间冲突").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("已安排过该课程").build();
+                return response.error("已安排过该课程");
+//                return builder.setCode(40000).setMessage("已安排过该课程").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -459,9 +542,11 @@ public class AdminController {
         List<ProfessionalCourseEntity> list = professionalCourseDao.getAllProfessionalCourse(pageNo, pageSize);
         if (list != null && list.size() > 0) {
             List<ProfessionalCourse> pList = changeToProfessionalCourse(list);
-            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(pList).build();
+            return response.successWithAll("获取数据成功", size, pList);
+//            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(pList).build();
         } else {
-            return builder.setCode(40000).setMessage("没有数据").build();
+            return response.error("没有数据");
+//            return builder.setCode(40000).setMessage("没有数据").build();
         }
     }
 
@@ -476,19 +561,26 @@ public class AdminController {
                                              @RequestParam("time") String time) {
         switch (professionalCourseDao.updateProfessionalCourse(id, grade_id, professional_id, course_id, time)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改排课信息成功").build();
+                return response.success("修改排课信息成功");
+//                return builder.setCode(20000).setMessage("修改排课信息成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改排课信息失败").build();
+                return response.error("修改排课信息失败");
+//                return builder.setCode(40000).setMessage("修改排课信息失败").build();
             case Constant.PARAMS_NOT_MATCH:
-                return builder.setCode(40000).setMessage("参数不正确").build();
+                return response.error("参数不正确");
+//                return builder.setCode(40000).setMessage("参数不正确").build();
             case Constant.COURSE_CONFLICT:
-                return builder.setCode(40000).setMessage("课程时间冲突").build();
+                return response.error("课程时间冲突");
+//                return builder.setCode(40000).setMessage("课程时间冲突").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("已安排过该课程").build();
+                return response.error("已安排过该课程");
+//                return builder.setCode(40000).setMessage("已安排过该课程").build();
             case Constant.NOT_EXIST:
-                return builder.setCode(40000).setMessage("排课信息不存在").build();
+                return response.error("排课信息不存在");
+//                return builder.setCode(40000).setMessage("排课信息不存在").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -499,11 +591,14 @@ public class AdminController {
     public Response deleteProfessionalCourse(@RequestParam("id") int id) {
         switch (professionalCourseDao.deleteProfessionalCourse(id)) {
             case Constant.DELETE_SUCCESS:
-                return builder.setCode(20000).setMessage("删除排课信息成功").build();
+                return response.success("删除排课信息成功");
+//                return builder.setCode(20000).setMessage("删除排课信息成功").build();
             case Constant.DELETE_FAILURE:
-                return builder.setCode(40000).setMessage("该排课信息已删除").build();
+                return response.error("该排课信息已删除");
+//                return builder.setCode(40000).setMessage("该排课信息已删除").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -517,15 +612,20 @@ public class AdminController {
                                                @RequestParam("times") String times) {
         switch (professionalCourseDao.saveMoreProfessionalCourse(grade_id, professional_id, courses_id, times)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("排课成功").build();
+                return response.success("排课成功");
+//                return builder.setCode(20000).setMessage("排课成功").build();
             case Constant.PARAMS_NOT_MATCH:
-                return builder.setCode(40000).setMessage("参数不合法").build();
+                return response.error("参数不合法");
+//                return builder.setCode(40000).setMessage("参数不合法").build();
             case Constant.COURSE_CONFLICT:
-                return builder.setCode(40000).setMessage("课程时间冲突").build();
+                return response.error("课程时间冲突");
+//                return builder.setCode(40000).setMessage("课程时间冲突").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("已安排过该课程").build();
+                return response.error("已安排过该课程");
+//                return builder.setCode(40000).setMessage("已安排过该课程").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -538,9 +638,11 @@ public class AdminController {
         List<ProfessionalCourseEntity> list = professionalCourseDao.getTargetProfessionalCourse(grade_id, professional_id);
         if (list != null && list.size() > 0) {
             List<ProfessionalCourse> professionalCourseList = changeToProfessionalCourse(list);
-            return builder.setCode(20000).setMessage("获取成功").setDataList(professionalCourseList).build();
+            return response.successWithDataList("获取成功", professionalCourseList);
+//            return builder.setCode(20000).setMessage("获取成功").setDataList(professionalCourseList).build();
         } else {
-            return builder.setCode(40000).setMessage("暂无课程信息").build();
+            return response.error("暂无课程信息");
+//            return builder.setCode(40000).setMessage("暂无课程信息").build();
         }
     }
 
@@ -581,21 +683,26 @@ public class AdminController {
             elements = document.getElementsByClass("wyu-lineheight-s");
             switch (type) {
                 case 0:
-                    return builder.setCode(20000).setData("校内通知")
-                            .setDataList(getItemList(0)).build();
+                    return response.successWithAll("获取校园网信息成功", "校内通知", getItemList(0));
+//                    return builder.setCode(20000).setData("校内通知")
+//                            .setDataList(getItemList(0)).build();
                 case 1:
-                    return builder.setCode(20000).setData("校内简讯")
-                            .setDataList(getItemList(1)).build();
+                    return response.successWithAll("获取校园网信息成功", "校内简讯", getItemList(1));
+//                    return builder.setCode(20000).setData("校内简讯")
+//                            .setDataList(getItemList(1)).build();
                 case 2:
-                    return builder.setCode(20000).setData("公示公告")
-                            .setDataList(getItemList(2)).build();
+                    return response.successWithAll("获取校园网信息成功", "公示公告", getItemList(2));
+//                    return builder.setCode(20000).setData("公示公告")
+//                            .setDataList(getItemList(2)).build();
                 default:
-                    return builder.setCode(40000).setMessage("未知错误").build();
+                    return response.error("未知错误");
+//                    return builder.setCode(40000).setMessage("未知错误").build();
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return builder.setCode(40000).setMessage("获取学校数据失败").build();
+            return response.error("获取学校数据失败");
+//            return builder.setCode(40000).setMessage("获取学校数据失败").build();
         }
     }
 
@@ -641,7 +748,8 @@ public class AdminController {
     @RequestMapping(value = "/getDetails", method = RequestMethod.POST)
     public Response getDetails(@RequestParam("link") String url) {
         String content = getArticleDetails(url);
-        return builder.setCode(20000).setMessage(content).build();
+        return response.success(content);
+//        return builder.setCode(20000).setMessage(content).build();
     }
 
     /**
@@ -682,11 +790,14 @@ public class AdminController {
         String content = getArticleDetails(link);
         switch (noticeDao.saveNotice(title, publish, time, content)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("保存成功").build();
+                return response.success("保存成功");
+//                return builder.setCode(20000).setMessage("保存成功").build();
             case Constant.SAVE_FAILURE:
-                return builder.setCode(40000).setMessage("该数据已存在").build();
+                return response.error("该数据已存在");
+//                return builder.setCode(40000).setMessage("该数据已存在").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -697,11 +808,14 @@ public class AdminController {
     public Response deleteNotice(@RequestParam("id") int id) {
         switch (noticeDao.deleteNotice(id)) {
             case Constant.DELETE_SUCCESS:
-                return builder.setCode(20000).setMessage("删除成功").build();
+                return response.success("删除成功");
+//                return builder.setCode(20000).setMessage("删除成功").build();
             case Constant.DELETE_FAILURE:
-                return builder.setCode(40000).setMessage("该数据不存在").build();
+                return response.error("该数据不存在");
+//                return builder.setCode(40000).setMessage("该数据不存在").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -715,15 +829,20 @@ public class AdminController {
                                  @RequestParam("time") String time) {
         switch (noticeDao.updateNotice(id, title, publish, time)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改校内信息成功").build();
+                return response.success("修改校内信息成功");
+//                return builder.setCode(20000).setMessage("修改校内信息成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改校内信息失败").build();
+                return response.error("修改校内信息失败");
+//                return builder.setCode(40000).setMessage("修改校内信息失败").build();
             case Constant.NOT_EXIST:
-                return builder.setCode(40000).setMessage("该校内通知不存在").build();
+                return response.error("该校内通知不存在");
+//                return builder.setCode(40000).setMessage("该校内通知不存在").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("该标题已被使用").build();
+                return response.error("该标题已被使用");
+//                return builder.setCode(40000).setMessage("该标题已被使用").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -735,11 +854,14 @@ public class AdminController {
                                         @RequestParam("content") String content) {
         switch (noticeDao.updateNoticeDetails(id, content)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改校内通知内容成功").build();
+                return response.success("修改校内通知内容成功");
+//                return builder.setCode(20000).setMessage("修改校内通知内容成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改校内通知内容失败").build();
+                return response.error("修改校内通知内容失败");
+//                return builder.setCode(40000).setMessage("修改校内通知内容失败").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -754,11 +876,14 @@ public class AdminController {
         String content = getArticleDetails(link);
         switch (briefDao.saveBrief(title, publish, time, content)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("保存校内简讯成功").build();
+                return response.success("保存校内简讯成功");
+//                return builder.setCode(20000).setMessage("保存校内简讯成功").build();
             case Constant.SAVE_FAILURE:
-                return builder.setCode(40000).setMessage("已保存该简讯").build();
+                return response.error("已保存该简讯");
+//                return builder.setCode(40000).setMessage("已保存该简讯").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -769,11 +894,14 @@ public class AdminController {
     public Response deleteBrief(@RequestParam("id") int id) {
         switch (briefDao.deleteBrief(id)) {
             case Constant.DELETE_SUCCESS:
-                return builder.setCode(20000).setMessage("删除成功").build();
+                return response.success("删除成功");
+//                return builder.setCode(20000).setMessage("删除成功").build();
             case Constant.DELETE_FAILURE:
-                return builder.setCode(40000).setMessage("该数据不存在").build();
+                return response.error("该数据不存在");
+//                return builder.setCode(40000).setMessage("该数据不存在").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -787,15 +915,20 @@ public class AdminController {
                                 @RequestParam("time") String time) {
         switch (briefDao.updateBrief(id, title, publish, time)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改校内简讯成功").build();
+                return response.success("修改校内简讯成功");
+//                return builder.setCode(20000).setMessage("修改校内简讯成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改校内简讯失败").build();
+                return response.error("修改校内简讯失败");
+//                return builder.setCode(40000).setMessage("修改校内简讯失败").build();
             case Constant.NOT_EXIST:
-                return builder.setCode(40000).setMessage("该校内简讯不存在").build();
+                return response.error("该校内简讯不存在");
+//                return builder.setCode(40000).setMessage("该校内简讯不存在").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("该标题已被使用").build();
+                return response.error("该标题已被使用");
+//                return builder.setCode(40000).setMessage("该标题已被使用").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -807,11 +940,14 @@ public class AdminController {
                                        @RequestParam("content") String content) {
         switch (briefDao.updateBriefDetails(id, content)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改校内简讯内容成功").build();
+                return response.success("修改校内简讯内容成功");
+//                return builder.setCode(20000).setMessage("修改校内简讯内容成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改校内简讯内容失败").build();
+                return response.error("修改校内简讯内容失败");
+//                return builder.setCode(40000).setMessage("修改校内简讯内容失败").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -826,11 +962,14 @@ public class AdminController {
         String content = getArticleDetails(link);
         switch (announcementDao.saveAnnouncement(title, publish, time, content)) {
             case Constant.SAVE_SUCCESS:
-                return builder.setCode(20000).setMessage("保存公示公告成功").build();
+                return response.success("保存公示公告成功");
+//                return builder.setCode(20000).setMessage("保存公示公告成功").build();
             case Constant.SAVE_FAILURE:
-                return builder.setCode(40000).setMessage("该公示公告已存在").build();
+                return response.error("该公示公告已存在");
+//                return builder.setCode(40000).setMessage("该公示公告已存在").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -841,11 +980,14 @@ public class AdminController {
     public Response deleteAnnouncement(@RequestParam("id") int id) {
         switch (announcementDao.deleteAnnouncement(id)) {
             case Constant.DELETE_SUCCESS:
-                return builder.setCode(20000).setMessage("删除成功").build();
+                return response.success("删除成功");
+//                return builder.setCode(20000).setMessage("删除成功").build();
             case Constant.DELETE_FAILURE:
-                return builder.setCode(40000).setMessage("该数据不存在").build();
+                return response.error("该数据不存在");
+//                return builder.setCode(40000).setMessage("该数据不存在").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -859,15 +1001,20 @@ public class AdminController {
                                        @RequestParam("time") String time) {
         switch (announcementDao.updateAnnouncement(id, title, publish, time)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改公示公告成功").build();
+                return response.success("修改公示公告成功");
+//                return builder.setCode(20000).setMessage("修改公示公告成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改公示公告失败").build();
+                return response.error("修改公示公告失败");
+//                return builder.setCode(40000).setMessage("修改公示公告失败").build();
             case Constant.NOT_EXIST:
-                return builder.setCode(40000).setMessage("该公告不存在").build();
+                return response.error("该公告不存在");
+//                return builder.setCode(40000).setMessage("该公告不存在").build();
             case Constant.HAS_EXIST:
-                return builder.setCode(40000).setMessage("改标题已使用").build();
+                return response.error("改标题已使用");
+//                return builder.setCode(40000).setMessage("改标题已使用").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -879,11 +1026,14 @@ public class AdminController {
                                               @RequestParam("content") String content) {
         switch (announcementDao.updateAnnouncementDetails(id, content)) {
             case Constant.UPDATE_SUCCESS:
-                return builder.setCode(20000).setMessage("修改公示公告内容成功").build();
+                return response.success("修改公示公告内容成功");
+//                return builder.setCode(20000).setMessage("修改公示公告内容成功").build();
             case Constant.UPDATE_FAILURE:
-                return builder.setCode(40000).setMessage("修改公示公告内容失败").build();
+                return response.error("修改公示公告内容失败");
+//                return builder.setCode(40000).setMessage("修改公示公告内容失败").build();
             default:
-                return builder.setCode(40000).setMessage("未知错误").build();
+                return response.error("未知错误");
+//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 }

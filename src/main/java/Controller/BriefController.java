@@ -4,10 +4,7 @@ import Dao.BriefDao;
 import Entity.BriefEntity;
 import Entity.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,13 +13,17 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("Brief")
+@CrossOrigin
 public class BriefController {
 
     @Autowired
     private BriefDao briefDao;
 
+//    @Autowired
+//    private Response.Builder builder;
+
     @Autowired
-    private Response.Builder builder;
+    private Response response;
 
     /**
      * 获取校内简讯
@@ -30,11 +31,14 @@ public class BriefController {
     @RequestMapping(value = "/getBrief", method = RequestMethod.POST)
     public Response getBrief(@RequestParam("pageNo") int pageNo,
                              @RequestParam("pageSize") int pageSize) {
+        long size = briefDao.getCount();
         List<BriefEntity> list = briefDao.getBrief(pageNo, pageSize);
         if (list != null && list.size() > 0) {
-            return builder.setCode(20000).setMessage("获取数据成功").setDataList(list).build();
+            return response.successWithAll("获取数据成功", size, list);
+//            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(list).build();
         }
-        return builder.setCode(40000).setMessage("没有数据").build();
+        return response.error("没有数据");
+//        return builder.setCode(40000).setMessage("没有数据").build();
     }
 
     /**
@@ -44,9 +48,11 @@ public class BriefController {
     public Response getBriefDetails(int id) {
         String content = briefDao.getBriefDetails(id);
         if (content != null) {
-            return builder.setCode(20000).setMessage("获取校内简讯详情成功").setData(content).build();
+            return response.successWithData("获取校内简讯详情成功", content);
+//            return builder.setCode(20000).setMessage("获取校内简讯详情成功").setData(content).build();
         } else {
-            return builder.setCode(40000).setMessage("获取校内简讯详情失败").build();
+            return response.error("获取校内简讯详情失败");
+//            return builder.setCode(40000).setMessage("获取校内简讯详情失败").build();
         }
     }
 }
