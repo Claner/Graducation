@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 录入校园信息</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/productionList.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/home.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+    <link rel="stylesheet" href="css/compiled/saveStudent.css">
+    <style>
+        #artCon{
+            line-height:24px;
+            font-size:14px;
+            text-indent: 2em;
+            padding: 2em;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+
+       <div>
+            <span class="title">录入校园信息</span>
+        </div>
+         <div class="one-level addBox">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="academy_name" class="col-sm-3 control-label">获取校园网部分信息：</label>
+                    <div class="col-sm-9">
+                         <select name="itemType" id="itemType" class="form-control" >
+                            <option value="0">校内通知</option>
+                            <option value="1">校内简讯</option>
+                            <option value="2">公示公告</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <button id="firstAdd">点击获取</button>
+        </div>
+
+        <div class="list">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>标题</th>
+                        <th>发布单位</th>
+                        <th>发布时间</th>
+                        <th>文章</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tablelist">
+                    <!--插入列表-->
+                </tbody>
+            </table>
+        </div>
+        <div id="navigation">
+            <!--插入分页-->
+        </div>
+
+    </div>
+     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">修改课程信息</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group" style="display: none;">
+                    <label for="addname_cn" class="col-sm-3 control-label">id：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="stuId">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="course_name" class="col-sm-3 control-label">课程名称：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="course_name">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="course_credit" class="col-sm-3 control-label">学分：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="course_credit">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="course_hour" class="col-sm-3 control-label">学时：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="course_hour">
+                    </div>
+                </div>
+            </form>
+            <div class="footbtn">
+                <button id="addbtn" onclick="modifyCourseInfo()">确认修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal fade" id="article" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">文章</h4>
+                </div>
+                <div class="modal-body" id="artCon">
+                   <p class="text-center" style="color:red;font-size:16px;">数据请求中</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+
+    <script type="text/x-handlebars-template" id="table-template">
+       <div id="nowData" style="display:none">{{data}}</div>
+       {{#each dataList}}
+       <tr>
+            <td>{{title}}</td>
+            <td>{{publish}}</td>
+            <td>{{time}}</td>
+            <td><a href="javascript:;" onclick="getArticle('{{link}}')" data-toggle="modal"  data-target="#article">查看文章</a></td>
+            <td>
+                <button class="btn btn-success" onclick="saveData('{{title}}','{{publish}}','{{time}}','{{link}}')" >保存</button>
+            </td>
+       </tr>
+       {{/each}}
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+            $("#firstAdd").on("click",function (){
+                getData();
+            });
+        };
+        function getData(){
+            var data={
+                type:$("#itemType").val()
+            };
+            sew.post('/Admin/getItemListByType',data,function (res){
+               var tableTpl = Handlebars.compile($("#table-template").html());
+              
+                $("#tablelist").html(tableTpl(res));
+               
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+        }
+
+        
+        function getArticle(link){
+            var data={
+                link:link
+            };
+            sew.post('/Admin/getDetails',data,function (res){
+                sew.log(res);
+               $("#artCon").html(res.message);
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+        }
+       
+
+       
+        function saveData(title,publish,time,link) {
+            var data={
+                title:title,
+                publish:publish,
+                time:time,
+                link:link
+            };
+            var url;
+            if($("#nowData").text()=="公示公告"){
+                url="/Admin/saveAnnouncement";
+            }else if($("#nowData").text()=="校内通知"){
+                url="/Admin/saveNotice  ";
+            }else if($("#nowData").text()=="校内简讯"){
+                url="/Admin/saveBrief";
+            }
+            swal({
+              title: "你确定要保存吗?",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "确认保存",
+              cancelButtonText: "取消保存",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm){
+              if (isConfirm) {
+                sew.post(url,data,function (res) {
+                     swal({
+                        title: "保存成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                },function (err){
+                    swal(err.message,"","error");
+                });
+                
+              } else {
+                swal("取消成功", "", "error");
+              }
+            });
+        }
+
+       
+
+        
+
+    </script>
+</body>
+</html>

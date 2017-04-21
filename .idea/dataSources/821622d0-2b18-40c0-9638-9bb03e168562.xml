@@ -29,268 +29,281 @@
     <table id="24" parent="1" name="announcement"/>
     <table id="25" parent="1" name="notice"/>
     <table id="26" parent="1" name="brief"/>
-    <column id="27" parent="15" name="id">
+    <table id="27" parent="1" name="avatar"/>
+    <column id="28" parent="15" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="28" parent="15" name="academy_name">
+    <column id="29" parent="15" name="academy_name">
       <mandatory>1</mandatory>
       <data-type>char(64)|0</data-type>
     </column>
-    <key id="29" parent="15" name="PRIMARY">
+    <key id="30" parent="15" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="30" parent="16" name="admin_id">
+    <column id="31" parent="16" name="admin_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="31" parent="16" name="name">
+    <column id="32" parent="16" name="name">
       <mandatory>1</mandatory>
       <data-type>char(32)|0</data-type>
     </column>
-    <column id="32" parent="16" name="sex">
+    <column id="33" parent="16" name="sex">
       <mandatory>1</mandatory>
       <data-type>char(1)|0</data-type>
     </column>
-    <column id="33" parent="16" name="phone">
+    <column id="34" parent="16" name="phone">
       <mandatory>1</mandatory>
       <data-type>char(32)|0</data-type>
     </column>
-    <column id="34" parent="16" name="address">
+    <column id="35" parent="16" name="address">
       <mandatory>1</mandatory>
       <data-type>varchar(256)|0</data-type>
     </column>
-    <key id="35" parent="16" name="PRIMARY">
+    <key id="36" parent="16" name="PRIMARY">
       <columns>admin_id</columns>
       <primary>1</primary>
     </key>
-    <column id="36" parent="17" name="id">
+    <column id="37" parent="17" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="37" parent="17" name="academy_id">
+    <column id="38" parent="17" name="academy_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="38" parent="17" name="pro_name">
+    <column id="39" parent="17" name="pro_name">
       <mandatory>1</mandatory>
       <data-type>char(64)|0</data-type>
     </column>
-    <column id="39" parent="17" name="year">
+    <column id="40" parent="17" name="year">
       <mandatory>1</mandatory>
       <data-type>char(3)|0</data-type>
     </column>
-    <key id="40" parent="17" name="PRIMARY">
+    <key id="41" parent="17" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="41" parent="18" name="stu_id">
+    <column id="42" parent="18" name="stu_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="42" parent="18" name="academy_id">
+    <column id="43" parent="18" name="academy_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="43" parent="18" name="professional_id">
+    <column id="44" parent="18" name="professional_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="44" parent="18" name="grade_id">
+    <column id="45" parent="18" name="grade_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="45" parent="18" name="name">
+    <column id="46" parent="18" name="name">
       <mandatory>1</mandatory>
       <data-type>char(32)|0</data-type>
     </column>
-    <column id="46" parent="18" name="sex">
+    <column id="47" parent="18" name="sex">
       <mandatory>1</mandatory>
       <data-type>char(1)|0</data-type>
     </column>
-    <column id="47" parent="18" name="phone">
+    <column id="48" parent="18" name="phone">
       <data-type>char(32)|0</data-type>
     </column>
-    <column id="48" parent="18" name="address">
+    <column id="49" parent="18" name="address">
       <data-type>varchar(256)|0</data-type>
     </column>
-    <key id="49" parent="18" name="PRIMARY">
+    <key id="50" parent="18" name="PRIMARY">
       <columns>stu_id</columns>
       <primary>1</primary>
     </key>
-    <column id="50" parent="19" name="id">
+    <column id="51" parent="19" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="51" parent="19" name="account">
+    <column id="52" parent="19" name="account">
       <mandatory>1</mandatory>
       <data-type>char(16)|0</data-type>
     </column>
-    <column id="52" parent="19" name="password">
+    <column id="53" parent="19" name="password">
       <mandatory>1</mandatory>
       <data-type>varchar(64)|0</data-type>
     </column>
-    <column id="53" parent="19" name="role">
+    <column id="54" parent="19" name="role">
       <mandatory>1</mandatory>
       <data-type>char(1)|0</data-type>
     </column>
-    <key id="54" parent="19" name="PRIMARY">
+    <key id="55" parent="19" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="55" parent="20" name="id">
+    <column id="56" parent="20" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="56" parent="20" name="course_name">
+    <column id="57" parent="20" name="course_name">
       <mandatory>1</mandatory>
       <data-type>char(32)|0</data-type>
     </column>
-    <column id="57" parent="20" name="course_credit">
+    <column id="58" parent="20" name="course_credit">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="58" parent="20" name="course_hour">
+    <column id="59" parent="20" name="course_hour">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <key id="59" parent="20" name="PRIMARY">
+    <key id="60" parent="20" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="60" parent="21" name="id">
+    <column id="61" parent="21" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="61" parent="21" name="grade_name">
+    <column id="62" parent="21" name="grade_name">
       <mandatory>1</mandatory>
       <data-type>char(32)|0</data-type>
     </column>
-    <key id="62" parent="21" name="PRIMARY">
+    <key id="63" parent="21" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="63" parent="22" name="id">
+    <column id="64" parent="22" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="64" parent="22" name="grade_id">
+    <column id="65" parent="22" name="grade_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="65" parent="22" name="professional_id">
+    <column id="66" parent="22" name="professional_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="66" parent="22" name="course_id">
+    <column id="67" parent="22" name="course_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="67" parent="22" name="time">
+    <column id="68" parent="22" name="time">
       <mandatory>1</mandatory>
       <data-type>char(128)|0</data-type>
     </column>
-    <key id="68" parent="22" name="PRIMARY">
+    <key id="69" parent="22" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="69" parent="23" name="id">
+    <column id="70" parent="23" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="70" parent="23" name="stu_id">
+    <column id="71" parent="23" name="stu_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <column id="71" parent="23" name="arrange_id">
+    <column id="72" parent="23" name="arrange_id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
     </column>
-    <key id="72" parent="23" name="PRIMARY">
+    <key id="73" parent="23" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="73" parent="24" name="id">
+    <column id="74" parent="24" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="74" parent="24" name="title">
+    <column id="75" parent="24" name="title">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="75" parent="24" name="publish">
+    <column id="76" parent="24" name="publish">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="76" parent="24" name="time">
+    <column id="77" parent="24" name="time">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="77" parent="24" name="content">
+    <column id="78" parent="24" name="content">
       <mandatory>1</mandatory>
       <data-type>text|0</data-type>
     </column>
-    <key id="78" parent="24" name="PRIMARY">
+    <key id="79" parent="24" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="79" parent="25" name="id">
+    <column id="80" parent="25" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="80" parent="25" name="title">
+    <column id="81" parent="25" name="title">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="81" parent="25" name="publish">
+    <column id="82" parent="25" name="publish">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="82" parent="25" name="time">
+    <column id="83" parent="25" name="time">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="83" parent="25" name="content">
+    <column id="84" parent="25" name="content">
       <mandatory>1</mandatory>
       <data-type>text|0</data-type>
     </column>
-    <key id="84" parent="25" name="PRIMARY">
+    <key id="85" parent="25" name="PRIMARY">
       <columns>id</columns>
       <primary>1</primary>
     </key>
-    <column id="85" parent="26" name="id">
+    <column id="86" parent="26" name="id">
       <mandatory>1</mandatory>
       <data-type>int(11)|0</data-type>
       <sequence-identity>1</sequence-identity>
     </column>
-    <column id="86" parent="26" name="title">
+    <column id="87" parent="26" name="title">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="87" parent="26" name="publish">
+    <column id="88" parent="26" name="publish">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="88" parent="26" name="time">
+    <column id="89" parent="26" name="time">
       <mandatory>1</mandatory>
       <data-type>varchar(128)|0</data-type>
     </column>
-    <column id="89" parent="26" name="content">
+    <column id="90" parent="26" name="content">
       <mandatory>1</mandatory>
       <data-type>text|0</data-type>
     </column>
-    <key id="90" parent="26" name="PRIMARY">
+    <key id="91" parent="26" name="PRIMARY">
       <columns>id</columns>
+      <primary>1</primary>
+    </key>
+    <column id="92" parent="27" name="user_id">
+      <mandatory>1</mandatory>
+      <data-type>int(11)|0</data-type>
+    </column>
+    <column id="93" parent="27" name="avatar">
+      <mandatory>1</mandatory>
+      <data-type>varchar(128)|0</data-type>
+    </column>
+    <key id="94" parent="27" name="PRIMARY">
+      <columns>user_id</columns>
       <primary>1</primary>
     </key>
   </database-model>

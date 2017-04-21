@@ -23,10 +23,12 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="LMN" />
+        <module name="Test" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="LMN" target="1.5" />
+      <module name="Test" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>

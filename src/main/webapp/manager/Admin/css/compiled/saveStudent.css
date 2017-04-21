@@ -3,7 +3,6 @@
 }
 .addBox {
 	width: 80%;
-	min-height: 200px;
 	margin: 50px auto;
 }
 input[type='radio']{vertical-align:text-bottom;margin-bottom:-1px;*margin-bottom:-4px;}

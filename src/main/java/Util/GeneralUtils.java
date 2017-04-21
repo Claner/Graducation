@@ -1,5 +1,11 @@
 package Util;
 
+import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Encoder;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -26,6 +32,9 @@ public class GeneralUtils<T> {
             md.update(str.getBytes());
             //得到该摘要
             bytes = md.digest();
+            BASE64Encoder encoder = new BASE64Encoder();
+            String base64 = encoder.encode(bytes);
+            System.out.println("BASE64 " + base64);
         } catch (NoSuchAlgorithmException e) {
             System.out.println("加密算法: " + algorithm + " 不存在: ");
         }
@@ -67,6 +76,24 @@ public class GeneralUtils<T> {
     public static boolean isParamsEmpty(String... params) {
         for (String param : params) {
             if ("".equals(param)) return true;
+        }
+        return false;
+    }
+
+    public static boolean saveFile(Integer user_id, MultipartFile file, HttpServletRequest request, String path) {
+        if (!file.isEmpty()) {
+            String[] s = file.getOriginalFilename().split("\\.");
+            //文件保存路径
+            String filePath = request.getSession().getServletContext().getRealPath("/" + path + "/")
+                    + "\\" + user_id + "\\" + s[0] + ".jpg";
+            try {
+                File f = new File(filePath);
+                if (!f.isDirectory()) f.mkdirs();
+                file.transferTo(f);
+                return true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }

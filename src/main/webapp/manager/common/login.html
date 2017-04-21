@@ -20,7 +20,7 @@
 
             <div class="content-wrap">
 
-                <h6>管理员登录</h6>
+                <h6>用户登录</h6>
                 <div class="col-sm-12 text-left">
                     <div style="width:90%;margin:auto">Username:</div>
                 </div>
@@ -94,7 +94,6 @@
 
         },function(res) {
 
-            console.log(res);
             $.cookie("account",acc,{
                 path:"/"
             });
@@ -110,9 +109,11 @@
                 closeOnConfirm: false
             },function (){
                 if($.cookie('role')==2){
-                    window.location.href = "adminInfo.html";
-                }else{
-                     window.location.href = "superAdmin.html";
+                    window.location.href = "../Admin/adminInfo.html";
+                }else if($.cookie('role')==3){
+                     window.location.href = "../Admin/superAdmin.html";
+                }else if($.cookie('role')==1){
+                     window.location.href = "../Home/studentInfo.html";
                 }
                 
             });

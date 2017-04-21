@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>主页</title>
+    <meta charset="utf-8">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+    <link rel="stylesheet" href="css/index.css">
+    <style>
+    
+    </style>
+   
+</head>
+<body>
+   
+    <div class="container">
+         <div class="header clearfix">
+            <div class="">
+                <h2 class="text-danger">校园网信息</h2>
+            </div>
+            <div class="pull-right login" >
+                <a href="login.html"><span >用户登录</span></a>
+            </div>
+        </div>
+        <div class="noticeContent">
+            <div class="rows">
+                <div class="title-header">
+                    <span class="title">校内通知</span>
+                </div>
+                <ul class="list notice-ul">
+                   
+                </ul>
+                <div id="noticeNavigation">
+                    <!--插入分页-->
+                </div>
+            </div>
+            <div class="rows">
+                <div class="title-header">
+                    <span class="title">校内简讯</span>
+                </div>
+                <ul class="list brief-ul">
+                    
+                </ul>
+                <div id="briefNavigation">
+                    <!--插入分页-->
+                </div>
+            </div>
+            <div class="rows">
+                <div class="title-header">
+                    <span class="title">公示公告</span>
+                </div>
+                <ul class="list announcement-ul">
+                   
+                </ul>
+                <div id="announcementNavigation">
+                    <!--插入分页-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+    <script type="text/x-handlebars-template" id="template">
+        {{#each dataList}}
+         <li>
+            <a href="article.html?id={{id}}&type={{../type}}" target="_blank"><span>{{title}}</span></a>
+            <span class="pull-right">{{publish}} {{time}}</span>
+        </li>
+        {{/each}}
+    </script>
+    <script>
+        getNotice(1);
+        function getNotice(page){
+            var limit=8;
+            var data={
+                pageNo:page,
+                pageSize:limit
+            };
+            sew.post('/Notice/getNotice',data,function (res){
+                res.type='notice';
+                var total_page=Math.ceil(res.data/limit);
+                insertContent('.notice-ul',res);
+                makeNavigation(page,total_page,'getNotice',"noticeNavigation",2);
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+        
+        getBrief(1);
+        function getBrief(page){
+            var limit=8;
+            var data={
+                pageNo:page,
+                pageSize:limit
+            };
+            sew.post('/Brief/getBrief',data,function (res){
+                res.type='brief';
+                var total_page=Math.ceil(res.data/limit);
+                insertContent('.brief-ul',res);
+                makeNavigation(page,total_page,'getNotice',"announcementNavigation",2);
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+        getAnnouncement(1);
+        function getAnnouncement(page){
+            var limit=8;
+            var data={
+                pageNo:page,
+                pageSize:limit
+            };
+            sew.post('/Announcement/getAnnouncement',data,function (res){
+               res.type='announcement';
+               var total_page=Math.ceil(res.data/limit);
+                insertContent('.announcement-ul',res);
+                makeNavigation(page,total_page,'getNotice',"announcementNavigation",2);
+            },function (err){
+                swal(err.message,"","error");
+            });
+        }
+
+
+        function insertContent(ele,res){
+            var tableTpl = Handlebars.compile($("#template").html());
+            $(ele).html(tableTpl(res));
+        }
+
+
+
+    </script>
+</body>
+</html>

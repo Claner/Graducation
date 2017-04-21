@@ -232,13 +232,13 @@
                     },function (){
                         window.location.reload();
                     });
+                },function (err){
+                    swal(err.message,"","error");
                 });
                 
               } else {
                 swal("取消删除成功", "", "error");
               }
-            },function (err){
-                swal(err.message,"","error");
             });
         }
 

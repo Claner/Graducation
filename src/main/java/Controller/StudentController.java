@@ -44,9 +44,6 @@ public class StudentController {
     @Autowired
     private CourseDao courseDao;
 
-//    @Autowired
-//    private Response.Builder builder;
-
     @Autowired
     private Response response;
 
@@ -70,10 +67,8 @@ public class StudentController {
             student.setProfessionalName(professionalDao.getProfessionalName(studentEntity.getProfessionalId()));
             student.setGrade(gradeDao.getGrade(studentEntity.getGradeId()));
             return response.successWithData("查询成功", student);
-//            return builder.setCode(20000).setMessage("查询成功").setData(student).build();
         } else {
             return response.error("学生不存在");
-//            return builder.setCode(40000).setMessage("学生不存在").build();
         }
     }
 
@@ -89,13 +84,10 @@ public class StudentController {
         switch (studentDao.updateStudent((Integer) session.getAttribute("isLogin"), name, sex, phone, address)) {
             case Constant.UPDATE_SUCCESS:
                 return response.success("修改学生信息成功");
-//                return builder.setCode(20000).setMessage("修改学生信息成功").build();
             case Constant.UPDATE_FAILURE:
                 return response.error("修改学生信息失败");
-//                return builder.setCode(40000).setMessage("修改学生信息失败").build();
             default:
                 return response.error("未知错误");
-//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -120,14 +112,11 @@ public class StudentController {
                 }
                 List<ProfessionalCourse> professionalCourseList = changeToProfessionalCourse(list);
                 return response.successWithDataList("获取学生课表成功", professionalCourseList);
-//                return builder.setCode(20000).setMessage("获取学生课表成功").setDataList(professionalCourseList).build();
             } else {
                 return response.error("暂无课表");
-//                return builder.setCode(40000).setMessage("暂无课表").build();
             }
         } else {
             return response.error("获取学生信息失败");
-//            return builder.setCode(40000).setMessage("获取学生信息失败").build();
         }
     }
 
@@ -152,14 +141,11 @@ public class StudentController {
                 }
                 List<ProfessionalCourse> professionalCourseList = changeToProfessionalCourse(list);
                 return response.successWithDataList("获取学生课表成功", professionalCourseList);
-//                return builder.setCode(20000).setMessage("获取学生课表成功").setDataList(professionalCourseList).build();
             } else {
                 return response.error("暂无课表");
-//                return builder.setCode(40000).setMessage("暂无课表").build();
             }
         } else {
             return response.error("获取学生信息失败");
-//            return builder.setCode(40000).setMessage("获取学生信息失败").build();
         }
     }
 
@@ -175,14 +161,11 @@ public class StudentController {
             if (list != null && list.size() > 0) {
                 List<ProfessionalCourse> professionalCourseList = changeToProfessionalCourse(list);
                 return response.successWithDataList("获取课程成功", professionalCourseList);
-//                return builder.setCode(20000).setMessage("获取课程成功").setDataList(professionalCourseList).build();
             } else {
                 return response.error("暂无可选的课程");
-//                return builder.setCode(40000).setMessage("暂无可选的课程").build();
             }
         } else {
             return response.error("获取学生信息失败");
-//            return builder.setCode(40000).setMessage("获取学生信息失败").build();
         }
     }
 
@@ -227,21 +210,16 @@ public class StudentController {
         if (professionalCourseDao.isExist(arrange_id)) {
             if (!professionalCourseDao.isPublic(arrange_id))
                 return response.error("该课程不是公选课");
-//                return builder.setCode(40000).setMessage("该课程不是公选课").build();
             switch (studentProfessionalCourseDao.selectCourse((Integer) session.getAttribute("isLogin"), arrange_id)) {
                 case Constant.SAVE_SUCCESS:
                     return response.success("选课成功");
-//                    return builder.setCode(20000).setMessage("选课成功").build();
                 case Constant.SAVE_FAILURE:
                     return response.error("已选该课程");
-//                    return builder.setCode(40000).setMessage("已选该课程").build();
                 default:
                     return response.error("未知错误");
-//                    return builder.setCode(40000).setMessage("未知错误").build();
             }
         } else {
             return response.error("该课程不存在");
-//            return builder.setCode(40000).setMessage("该课程不存在").build();
         }
     }
 
@@ -271,16 +249,12 @@ public class StudentController {
                 session.getAttribute("isLogin"), arrange_id)) {
             case Constant.DELETE_SUCCESS:
                 return response.success("退课成功");
-//                return builder.setCode(20000).setMessage("退课成功").build();
             case Constant.DELETE_FAILURE:
                 return response.error("退课失败");
-//                return builder.setCode(40000).setMessage("退课失败").build();
             case Constant.NOT_EXIST:
                 return response.error("已退选该课程");
-//                return builder.setCode(40000).setMessage("已退选该课程").build();
             default:
                 return response.error("未知错误");
-//                return builder.setCode(40000).setMessage("未知错误").build();
         }
     }
 
@@ -331,23 +305,18 @@ public class StudentController {
                 }
                 if (grade_id > allList.size())
                     return response.error("暂无没有该年级的成绩");
-//                    return builder.setCode(40000).setMessage("暂无没有该年级的成绩").build();
                 switch (grade_id) {
                     case 0:
                         return response.successWithDataList("获取学生成绩成功",allList);
-//                        return builder.setCode(20000).setMessage("获取学生成绩成功").setDataList(allList).build();
                     default:
                         return response.successWithData("获取学生成绩成功",allList.get(grade_id-1));
-//                        return builder.setCode(20000).setMessage("获取学生成绩成功").setData(allList.get(grade_id - 1)).build();
                 }
             } else {
                 return response.error("用户名或密码错误");
-//                return builder.setCode(40000).setMessage("用户名或密码错误").build();
             }
         } catch (IOException e) {
             e.printStackTrace();
             return response.error("子系统崩溃ing");
-//            return builder.setCode(40000).setMessage("子系统崩溃ing").build();
         }
     }
 }

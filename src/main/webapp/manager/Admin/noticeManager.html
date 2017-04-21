@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>后台管理系统 | 校园信息管理</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="css/compiled/productionList.css" type="text/css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="css/compiled/home.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+    <link rel="stylesheet" href="css/compiled/saveStudent.css">
+    <style>
+        .addBox {
+            min-height:30px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <!--插入导航-->
+    </div>
+    <div id="sideLeft">
+        <!--左边栏菜单-->
+        
+    </div>
+
+
+    <!-- main container -->
+    <div class="content">
+        
+       <div>
+            <span class="title">校园信息管理</span>
+        </div>
+         <div class="one-level addBox">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="academy_name" class="col-sm-3 control-label">选择类型：</label>
+                    <div class="col-sm-9">
+                         <select name="itemType" id="itemType" class="form-control" >
+                            <option value="0">校内通知</option>
+                            <option value="1">校内简讯</option>
+                            <option value="2">公示公告</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <button id="firstAdd">点击获取</button>
+        </div>
+        <div class="list">
+            <table class="table table-bordered">
+               
+            </table>
+        </div>
+        <div id="navigation">
+            <!--插入分页-->
+        </div>
+
+    </div>
+    
+    <div class="modal fade" id="changeMess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">进行修改</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+                <div class="form-group" style="display: none;">
+                    <label for="addname_cn" class="col-sm-3 control-label">id：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="id">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-sm-3 control-label">标题：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="title">
+                    </div>
+                </div>
+                 <div class="form-group">
+                    <label for="publish" class="col-sm-3 control-label">发布单位：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="publish">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="time" class="col-sm-3 control-label">时间：</label>
+                    <div class="col-sm-9">
+                        <input type="text" id="time">
+                    </div>
+                </div>
+            </form>
+            <div class="footbtn">
+                <button id="addbtn" onclick="modifyInfo()">确认修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+    
+
+    <script type="text/x-handlebars-template" id="table-template">
+         <thead>
+            <tr>
+                <th>标题</th>
+                <th>发布单位</th>
+                <th>发布时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="tablelist">
+            {{#each this}}
+           <tr>
+                <td>{{title}}</td>
+                <td>{{publish}}</td>
+                <td>{{time}}</td>
+                <td>
+                    <button class="btn btn-primary" data-toggle="modal"  data-target="#changeMess" onclick="changeInfo('{{id}}','{{title}}','{{publish}}','{{time}}')">修改</button>
+                    <button class="btn btn-danger" onclick="deleteInfo({{id}})">删除</button>
+                </td>
+           </tr>
+           {{/each}}
+        </tbody>
+    </script>
+
+    <script type="text/javascript">
+        window.onload = function() {
+
+            $("#header").load('navbar.html');
+            $("#sideLeft").load('side.html');
+
+            $("#firstAdd").on("click",function () {
+                /* body... */
+                $(".table").html("");
+                $(".navigation").empty();
+                getData(1);
+            });
+
+
+        };
+        function getData(page){
+            var url;
+            var type=$("#itemType").val();
+            if(type==0){
+                url="/Notice/getNotice";
+            }else if(type==1){
+                url="/Brief/getBrief";
+            }else if(type==2){
+                url="/Announcement/getAnnouncement";
+            }
+            sew.post(url,{
+                pageNo:page,
+                pageSize:8
+            },function (res){
+               var total_page=Math.ceil(res.data/8);
+
+               var tableTpl = Handlebars.compile($("#table-template").html());
+                $(".table").html(tableTpl(res.dataList));
+                sew.log(res.dataList);
+                makeNavigation(page,total_page,'getData',"navigation",2);
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+        }
+
+        function changeInfo(id,title,publish,time){
+            $("#id").val(id);
+            $("#title").val(title);
+            $("#publish").val(publish);
+            $("#time").val(time);
+        }
+
+        function deleteInfo(id) {
+            var type=$("#itemType").val();
+            var url='';
+            if(type==0){
+                url="/Admin/deleteNotice";
+            }else if(type==1){
+                url="/Admin/deleteBrief";
+            }else if(type==2){
+                url="/Admin/modifyAnnouncement";
+            }
+            swal({
+              title: "你确定要删除吗?",
+              text: "删除后不可恢复!",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#DD6B55",
+              confirmButtonText: "确认删除",
+              cancelButtonText: "取消删除",
+              closeOnConfirm: false,
+              closeOnCancel: false
+            },
+            function(isConfirm){
+              if (isConfirm) {
+                var data={
+                    id:id
+                };
+                sew.post(url,data,function (res) {
+                     swal({
+                        title: "删除成功!",
+                        text: "",
+                        type: "success",
+                        closeOnConfirm: false
+                    },function (){
+                        window.location.reload();
+                    });
+                },function (err){
+                    swal(err.message,"","error");
+                });
+                
+              } else {
+                swal("取消删除成功", "", "error");
+              }
+            });
+        }
+
+       function modifyInfo(){
+            var url;
+            var type=$("#itemType").val();
+            if(type==0){
+                url="/Admin/modifyNotice";
+            }else if(type==1){
+                url="/Admin/modifyBrief";
+            }else if(type==2){
+                url="/Admin/modifyAnnouncement";
+            }
+            var data={
+                id:$("#id").val(),
+                title:$("#title").val(),
+                publish:$("#publish").val(),
+                time:$("#time").val()
+            };
+            sew.log(data);
+            sew.post(url,data,function (res){
+             
+               swal({
+                title: res.message,
+                text: "",
+                type: "success",
+                confirmButtonText: "",
+                closeOnConfirm: false
+            },function (){
+               window.location.reload();
+            });
+               
+            },function (err){
+                 swal(err.message,"","error");
+            });
+        
+       }
+        
+
+    </script>
+</body>
+</html>

@@ -2,7 +2,7 @@ if(typeof $ == "undefined")
     throw new Error("sew requires jQuery");
 
 var sew = {
-	  base_url: "http://localhost:8080/School",
+	  base_url: "http://139.199.165.150:8080/School",
       back_url: "",
 	  debug: true
 };

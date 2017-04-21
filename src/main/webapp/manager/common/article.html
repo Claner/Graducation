@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>主页</title>
+    <meta charset="utf-8">
+    <link href="../common/css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="../common/css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+    <link href="../common/css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/layout.css" />
+    <link rel="stylesheet" href="../common/css/sweet-alert.css">
+    <link rel="stylesheet" href="../common/css/navigation.css">
+    <link rel="stylesheet" href="css/index.css">
+
+    <style>
+        #art{
+            line-height: 28px;
+            font-size: 16px;
+            text-indent: 2em;
+        }
+    </style>
+   
+</head>
+<body>
+   
+    <div class="container">
+         <div class="header clearfix">
+            <div class="">
+                <h2 class="text-danger">校园网信息</h2>
+            </div>
+            <div class="pull-right login" >
+                <a href="login.html"><span >用户登录</span></a>
+            </div>
+        </div>
+        <div class="noticeContent">
+            <div class="rows" id="art">
+                
+            </div>
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="../common/js/jquery.min.js"></script>
+    <script src="../common/js/bootstrap.min.js"></script>
+    <script src="../common/js/jquery.cookie.min.js"></script>
+    <script src="../common/js/sewsrc.js"></script>
+    <script src="../common/js/notie.js"></script>
+    <script src="../common/js/sweet-alert.js"></script>
+    <script src="../common/js/handlebars.min.js"></script>
+    <script src="../common/js/navigation.js"></script>
+    <script>
+        $(function (){
+            var url=location.search;
+            var obj=new Object();
+            if(url.indexOf("?")!=-1){
+                var str=url.substr(1);
+                strs=str.split("&");
+                for(var i=0;i<strs.length;i++){
+                    obj[strs[i].split("=")[0]]=strs[i].split("=")[1];
+                }
+                var getUrl="";
+                if(obj.type=='notice'){
+                    getUrl="/Notice/getNoticeDetails";
+                }else if(obj.type=='brief'){
+                    getUrl="/Brief/getBriefDetails";
+                }else if(obj.type='announcement'){
+                    getUrl="/Announcement/getAnnouncementDetails";
+                }
+                sew.post(getUrl,{
+                    id:obj.id
+                },function (res){
+                    $("#art").html(res.data);
+                },function (err){
+                    swal(err.message,"","error");
+                });
+            }
+        });
+    </script>
+   
+</body>
+</html>

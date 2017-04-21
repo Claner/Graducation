@@ -19,9 +19,6 @@ import java.util.List;
 @CrossOrigin
 public class SuperAdminController {
 
-//    @Autowired
-//    private Response.Builder builder;
-
     @Autowired
     private Response response;
 
@@ -46,19 +43,15 @@ public class SuperAdminController {
                              @RequestParam("address") String address) {
         if (userDao.isUserExist(account))
             return response.error("管理员已存在");
-//            return builder.setCode(40000).setMessage("管理员已存在").build();
         int id = userDao.saveAdmin(account, password);
         if (id != 0) {
             if (adminDao.saveAdmin(id, name, sex, phone, address)) {
                 return response.success("添加管理员成功");
-//                return builder.setCode(20000).setMessage("添加管理员成功").build();
             } else {
                 return response.error("添加管理员成功但初始化信息失败");
-//                return builder.setCode(40000).setMessage("添加管理员成功但初始化信息失败").build();
             }
         } else {
             return response.error("添加管理员失败");
-//            return builder.setCode(40000).setMessage("添加管理员失败").build();
         }
     }
 
@@ -69,10 +62,8 @@ public class SuperAdminController {
     public Response deleteAdmin(@RequestParam("id") int id) {
         if (superAdminDao.deleteAdmin(id)) {
             return response.success("删除管理员成功");
-//            return builder.setCode(20000).setMessage("删除管理员成功").build();
         } else {
             return response.error("删除管理员失败");
-//            return builder.setCode(40000).setMessage("删除管理员失败").build();
         }
     }
 
@@ -86,10 +77,8 @@ public class SuperAdminController {
         List<AdminEntity> list = adminDao.getAllAdmin(pageNo, pageSize);
         if (list != null && list.size() > 0) {
             return response.successWithAll("获取数据成功", size, list);
-//            return builder.setCode(20000).setMessage("获取数据成功").setData(size).setDataList(list).build();
         } else {
             return response.error("没有数据");
-//            return builder.setCode(40000).setMessage("没有数据").build();
         }
     }
 }

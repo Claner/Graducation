@@ -30,7 +30,7 @@ $("#loginout").click(function() {
 	        confirmButtonText: "",
 	        closeOnConfirm: false
 	    },function (){
-	        window.location.href = "login.html";
+	        window.location.href = "../common/login.html";
 	   });
 	},function(err) {
 		//sew.log("退出失败");
